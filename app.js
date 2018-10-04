@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var mongodb = require('mongodb');
+var url = 'mongodb://localhost:27017/';
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -18,6 +21,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use( (req, res, next) => {
+  mongodb.MongoClient.connect(url, (err, db) => {
+      if (err) {
+        console.log("Nem sikerült csatlakozni az adatbázishoz!");
+      } else{
+        console.log("Sikeres csatlakozás az adatbázishoz!");
+      }
+      db.close();
+  });
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
