@@ -5,10 +5,26 @@
       h3 Otthon
     ul.list-unstyled.components
         li.list-rooms-group
-          a.list-rooms
-    button.btn.btn-secondary.find-room-btn
+          each roomName in roomsName
+            a #{roomName}
+    button.btn.btn-secondary(type='button', data-toggle='modal', data-target='#addRoomModal')
       i.fas.fa-plus
 
   // Page Content
   #content
       .container-fluid
+
+// Modal
+#addRoomModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addRoomModalLabel', aria-hidden='true')
+  .modal-dialog(role='document')
+    .modal-content
+      .modal-header
+        h5#addRoomModalLabel.modal-title Helyiség hozzáadása
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+      form(action='/api', method='post')
+        .modal-body
+            input#newRoomName.form-control(name='name' type='text' placeholder='Helyiség neve')
+        .modal-footer
+          button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
+          button.btn.btn-secondary.new-room-btn(type='submit') Mentés

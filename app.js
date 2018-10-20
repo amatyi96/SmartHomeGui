@@ -4,8 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var mongodb = require('mongodb');
-var url = 'mongodb://localhost:27017/';
+// Szoba model beimportálása
+var Rooms = require('./module/rooms');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -22,16 +22,36 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+/**
+ * Middleware a szobák nevének a sidebar-ban történő megjelenítéshez.
+ */
 app.use( (req, res, next) => {
-  mongodb.MongoClient.connect(url, (err, db) => {
-      if (err) {
-        console.log("Nem sikerült csatlakozni az adatbázishoz!");
-      } else{
-        console.log("Sikeres csatlakozás az adatbázishoz!");
-      }
-      db.close();
+  var roomsNameList = Rooms.getAll();
+  var result = [];
+
+  roomsNameList.then( (rooms) => {
+    for( var i in rooms) {
+      result.push(rooms[i].name);
+    }
+
+    res.locals.roomsName = result;
+
+    next();
+  }).catch( (err) => {
+    console.error("Valami nincs rendben: " + err);
   });
-  next();
+});
+
+/**
+ * API
+ * Szoba hozzáadása az adatbázishoz.
+ */
+app.post('/api', (req, res) => {
+  Rooms.insertRoom(req.body.name, (err, room) => {
+    //Error kezelés is kéne!
+    res.redirect('/');
+  });
 });
 
 app.use('/', indexRouter);
