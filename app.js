@@ -22,7 +22,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 /**
  * Middleware a szobák nevének a sidebar-ban történő megjelenítéshez.
  */
@@ -32,7 +31,7 @@ app.use( (req, res, next) => {
 
   roomsNameList.then( (rooms) => {
     for( var i in rooms) {
-      result.push(rooms[i].name);
+      result.push(rooms[i]);
     }
 
     res.locals.roomsName = result;

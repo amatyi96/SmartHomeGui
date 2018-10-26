@@ -1,4 +1,45 @@
 extends layout
 
 block content
-
+  .container
+    //Grid
+    .row
+      .col-sm
+        .card.text-white.bg-secondary.mb-3(style='max-width: 18rem;')
+          .card-header
+            i.fas.fa-cloud.fa-7x
+          .card-body
+            h5.card-title
+              | 30 °C
+            p.card-text
+              | Utolsó frissités: 16:40
+          #card-footer1.card-footer
+            i.fas.fa-wrench
+      .col-sm
+        .card.text-white.bg-secondary.mb-3(style='max-width: 18rem;')
+          .card-header
+            i.fas.fa-cloud-sun.fa-7x
+          .card-body
+            h5.card-title
+              | 25 °C
+            p.card-text
+              | Utolsó frissités: 16:40
+          #card-footer2.card-footer
+            i.fas.fa-wrench
+      .col-sm
+        .card.text-white.bg-secondary.mb-3(style='max-width: 18rem;')
+          .card-header
+            i.fab.fa-cloudversify.fa-7x
+          .card-body
+            h5.card-title
+              | 13 °C
+            p.card-text
+              | Utolsó frissités: 16:40
+          #card-footer3.card-footer
+            i.fas.fa-wrench
+    
+    //Hozzáad egy újabb sor gridet!
+    #plusGridButton.row
+      .col-sm
+        a.linkPlus(href="")
+          i.fas.fa-plus.fa-3x

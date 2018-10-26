@@ -6,13 +6,15 @@
     ul.list-unstyled.components
         li.list-rooms-group
           each roomName in roomsName
-            a #{roomName}
-    button.btn.btn-secondary(type='button', data-toggle='modal', data-target='#addRoomModal')
+            a(href=roomName._id) #{roomName.name}
+    button.btn.btn-secondary(id='addRoomButton',type='button', data-toggle='modal', data-target='#addRoomModal')
       i.fas.fa-plus
 
   // Page Content
   #content
-      .container-fluid
+    .container-fluid
+      block content
+
 
 // Modal
 #addRoomModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addRoomModalLabel', aria-hidden='true')

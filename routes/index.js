@@ -6,4 +6,11 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/**
+ * ID alapján lesz a szobáknak külön oldala!
+ */
+router.get('/:id', function(req, res, next) {
+  res.render('index', { title: 'SmartHomeGui' });
+});
+
 module.exports = router;
