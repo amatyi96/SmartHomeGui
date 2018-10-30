@@ -4,8 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-// Szoba model beimportálása
+// Modellek beimportálása
 var Rooms = require('./module/rooms');
+var Sensors = require('./module/sensors');
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -46,10 +48,33 @@ app.use( (req, res, next) => {
  * API
  * Szoba hozzáadása az adatbázishoz.
  */
-app.post('/api', (req, res) => {
+app.post('/api/insertRoom', (req, res) => {
   Rooms.insertRoom(req.body.name, (err, room) => {
     //Error kezelés is kéne!
+    
     res.redirect('/');
+  });
+});
+
+// Szenzor beszúrása az adatbázisba!
+app.post('/api/insertSensor', (req, res) => {
+  Sensors.insertSensor(req.body.room_id, req.body.sensorName, req.body.selectedIcon, req.body.selectedDuty, (err, room) => {
+    //Error kezelés is kéne!
+    
+    res.redirect('/' + req.body.room_id);
+  });
+});
+
+// Szenzorok lekérdezése az adatbázisból ID alapján!
+app.get('/api/getSensorByID/:id', (req, res) => {
+  Sensors.getAllSensorsbyId(req.params.id, function(err, data) {
+    res.send(data);
+  });
+});
+
+app.post('/api/updateSensor/:id', (req, res) => {
+  Sensors.updateSensor(req.params.id, req.body.sensorName, req.body.selectedIcon, req.body.functionRadioButton, function(err, data) {
+    res.redirect('/' + req.body.room_id);
   });
 });
 

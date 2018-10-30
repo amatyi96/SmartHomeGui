@@ -119,16 +119,24 @@ a:focus {
 }
 
 /* ---------------------------------------------------
-    Plus Grid
+    Plus Grid Button
 ----------------------------------------------------- */
 
 #plusGridButton {
     text-align: center;
-    color: #6f757b
 }
 
-.linkPlus :hover {
-    transform: scale(1.2);
-    border: solid;
-    border-radius: 15px;
+.addNewSensor-btn {
+    background: none;
+    border: none;
+    color: #6c757d;
+}
+
+/* ---------------------------------------------------
+    Function CheckBox in Modal
+----------------------------------------------------- */
+
+.functionCheckBox {
+    margin-top: 10px;
+    margin-left: 3px;
 }

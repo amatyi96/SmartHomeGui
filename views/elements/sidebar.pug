@@ -24,7 +24,7 @@
         h5#addRoomModalLabel.modal-title Helyiség hozzáadása
         button.close(type='button', data-dismiss='modal', aria-label='Close')
           span(aria-hidden='true') &times;
-      form(action='/api', method='post')
+      form(action='/api/insertRoom', method='post')
         .modal-body
             input#newRoomName.form-control(name='name' type='text' placeholder='Helyiség neve')
         .modal-footer
