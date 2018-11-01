@@ -1,54 +1,33 @@
 extends layout
 
 block content
-  .container
-    //Grid
-    .row
-      each sensor in sensors
-        #tesztCol.col-sm
-          .card.text-white.bg-secondary.mb-3(style='max-width: 18rem;')
-            .card-header
-              //| #{sensor.icon}
-              i.fas.fa-cloud.fa-7x
-            .card-body
-              h5.card-title
-                | 30 °C
-              p.card-text
-                | Utolsó frissités: 16:40
-            #card-footer1.card-footer
-              button.btn.btn-secondary.sensorSetting(data-id=sensor.id type='button' data-toggle='modal' data-target='#sensorSettingModal')
-                i.fas.fa-wrench
-        
-      //.col-sm
+  //Grid
+  .grid-container.grid-container--fit
+    each sensor in sensors
+      .grid-element
         .card.text-white.bg-secondary.mb-3(style='max-width: 18rem;')
           .card-header
-            i.fas.fa-cloud-sun.fa-7x
+            //| #{sensor.icon}
+            i.fas.fa-cloud.fa-7x
           .card-body
             h5.card-title
-              | 25 °C
+              | 30 °C
             p.card-text
               | Utolsó frissités: 16:40
-          #card-footer2.card-footer
-            button.btn.btn-secondary(type='button' data-toggle='modal' data-target='#sensorSettingModal')
+          .card-footer.card-footer-settingIcon.editModeItem
+            button.btn.btn-secondary.sensorSetting-btn(data-id=sensor.id type='button' data-toggle='modal' data-target='#sensorSettingModal')
               i.fas.fa-wrench
-      //.col-sm
-        .card.text-white.bg-secondary.mb-3(style='max-width: 18rem;')
-          .card-header
-            i.fab.fa-cloudversify.fa-7x
-          .card-body
-            h5.card-title
-              | 13 °C
-            p.card-text
-              | Utolsó frissités: 16:40
-          #card-footer3.card-footer
-            button.btn.btn-secondary(type='button' data-toggle='modal' data-target='#sensorSettingModal')
-              i.fas.fa-wrench
+          .card-footer.card-footer-closeIcon.editModeItem
+            form(action='/api/deleteSensor/' + sensor.id, method='post')
+              input(type='hidden' name='room_id' value=room_id)
+              button.btn.btn-secondary.sensorDelete-btn(data-id=sensor.id type='submit')
+                i.fas.fa-times
     
-    //Hozzáad egy újabb sor gridet!
-    #plusGridButton.row
-      .col-sm
-        button.btn.btn-secondary.addNewSensor-btn(type='button' data-toggle='modal' data-target='#addNewSensorModal')
-          i.fas.fa-plus.fa-3x
+  //Hozzáad egy újabb sor gridet!
+  #plusGridButton.row
+    .col-sm
+      button.btn.btn-secondary.editModeItem.addNewSensor-btn(type='button' data-toggle='modal' data-target='#addNewSensorModal')
+        i.fas.fa-plus.fa-3x
 
   // Sensor Setting Modal
   #sensorSettingModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='sensorSettingModalLabel' aria-hidden='true')
@@ -60,7 +39,7 @@ block content
             span(aria-hidden='true') &times;
         form(id='sensorUpdateForm' action='' method='post')
           .modal-body
-            input(type='hidden' name='room_id' value=room_id)
+            input(type='hidden' name='deleteSensorInput_room_id' value=room_id)
             .input-group.mb-3
               select#selectedIconId.custom-select(name='selectedIcon')
                 option(selected='')

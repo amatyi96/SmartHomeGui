@@ -61,6 +61,9 @@ module.exports = {
 
     updateSensor: function(id, name, icon, duty, callback) {
         sensors.updateOne({ _id: id }, { $set: { name: name, icon: icon, duty, duty}}, callback);
-    }
+    },
 
+    deleteSensorById: function(id, callback) {
+        sensors.deleteOne({ _id: id}, callback);
+    }
 }

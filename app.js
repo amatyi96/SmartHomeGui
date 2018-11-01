@@ -68,12 +68,17 @@ app.post('/api/insertSensor', (req, res) => {
 // Szenzorok lekérdezése az adatbázisból ID alapján!
 app.get('/api/getSensorByID/:id', (req, res) => {
   Sensors.getAllSensorsbyId(req.params.id, function(err, data) {
+    //Error kezelés is kéne!
+
     res.send(data);
   });
 });
 
-app.post('/api/updateSensor/:id', (req, res) => {
-  Sensors.updateSensor(req.params.id, req.body.sensorName, req.body.selectedIcon, req.body.functionRadioButton, function(err, data) {
+// Szenzorok adatainak módosítása!
+app.post('/api/deleteSensor/:id', (req, res) => {
+  Sensors.deleteSensorById(req.params.id, function(err, data) {
+    //Error kezelés is kéne!
+    
     res.redirect('/' + req.body.room_id);
   });
 });

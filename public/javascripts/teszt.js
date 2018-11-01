@@ -3,22 +3,15 @@
  */
 editModeToggle = document.getElementById('editModeToggleDiv');
 
-/**
- * Elemek, amelyek elérhetőek az edit mode-ban.
- */
-var editModeItem = ["addRoomButton", "card-footer1", "plusGridButton"];
-
 editModeToggle.onclick = function() {
     editModeToggleValue = document.getElementById('editModeToggle').checked;
+    var editModeItem = document.getElementsByClassName('editModeItem');
 
-    if(editModeToggleValue) {
-        for(var i = 0; i < editModeItem.length; i++) {
-            console.log(editModeItem[i]);
-            document.getElementById(editModeItem[i]).style.display = "none";
-        }
-    } else {
-        for(var i = 0; i < editModeItem.length; i++) {
-            document.getElementById(editModeItem[i]).style.display = "initial";
+    for(var i = 0; i < editModeItem.length; i++) {
+        if(editModeToggleValue) {
+            editModeItem[i].style.display = "none";
+        } else {
+            editModeItem[i].style.display = "initial";
         }
     }
 };

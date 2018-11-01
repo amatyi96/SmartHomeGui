@@ -73,7 +73,7 @@ a:focus {
 
 #content {
     width: 100%;
-    padding: 110px;
+    padding: 60px;
     min-height: 100vh;
     transition: all 0.3s;
 }
@@ -110,12 +110,28 @@ a:focus {
     font-size: 30px;
 }
 
-.card-footer {
+.card-footer-settingIcon {
     border: none;
     background: none;
     position: absolute;
     top: -10px;
     right: -15px;
+}
+
+.card-footer-closeIcon {
+    position: absolute;
+    background: none;
+    border: none;
+    top: -10px;
+    left: -15px;
+}
+
+.sensorSetting-btn{
+    background: #697179;
+}
+
+.sensorDelete-btn {
+    background: #697179;
 }
 
 /* ---------------------------------------------------
@@ -139,4 +155,21 @@ a:focus {
 .functionCheckBox {
     margin-top: 10px;
     margin-left: 3px;
+}
+
+/* ---------------------------------------------------
+    Grid Position
+----------------------------------------------------- */
+
+.grid-container {
+    display: grid;
+}
+
+.grid-container--fit {
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+}
+
+.grid-element {
+    margin-right: 20px;
+    margin-bottom: 30px;
 }

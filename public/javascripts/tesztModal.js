@@ -1,4 +1,7 @@
-$(document).on("click", ".sensorSetting", function () {
+/**
+ * Egy szenzort reprezentáló Card jobb felső sarkában található ikonra kattintva egy Modal nyílik le, aminek input mezői ki vannak töltve az aktuális szenzor értékeivel!
+ */
+$(document).on("click", ".sensorSetting-btn", function () {
     var mySensorId = $(this).data('id');
 
     $.get( 'http://localhost:3000/api/getSensorByID/' + mySensorId, function( data ) {
@@ -19,12 +22,3 @@ $(document).on("click", ".sensorSetting", function () {
         }
     })*/
 });
-
-
-
-/*
-$('body').on("click", ".sensorSetting", () => {
-    //var cardDiv = $(this).closest(".card");
-    var cardId = $(this).data("cardid");
-    alert(cardId);
-});*/
