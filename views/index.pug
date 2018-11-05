@@ -2,15 +2,15 @@ extends layout
 
 block content
   //Grid
-  .grid-container.grid-container--fit
+  .row
     each sensor in sensors
-      .grid-element
-        .card.text-white.bg-secondary.mb-3(style='max-width: 18rem;')
+      .col-12.col-lg-6.col-xl-4
+        .card.text-white.bg-secondary.mb-3(style='max-width: 100%; min-width: 12rem;')
           .card-header
             //| #{sensor.icon}
             i.fas.fa-cloud.fa-7x
           .card-body
-            h5.card-title
+            #temp.h5.card-title
               | 30 °C
             p.card-text
               | Utolsó frissités: 16:40
@@ -29,6 +29,10 @@ block content
       button.btn.btn-secondary.editModeItem.addNewSensor-btn(type='button' data-toggle='modal' data-target='#addNewSensorModal')
         i.fas.fa-plus.fa-3x
 
+  //Szoba törlés és módosítása!
+  button.btn.btn-link.editModeItem.roomSetting-btn(data-id=room_id  type='button'  data-toggle='modal' data-target='#roomSettingModal')
+    i.fas.fa-door-open.fa-2x
+
   // Sensor Setting Modal
   #sensorSettingModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='sensorSettingModalLabel' aria-hidden='true')
     .modal-dialog(role='document')
@@ -39,7 +43,7 @@ block content
             span(aria-hidden='true') &times;
         form(id='sensorUpdateForm' action='' method='post')
           .modal-body
-            input(type='hidden' name='deleteSensorInput_room_id' value=room_id)
+            input(type='hidden' name='room_id' value=room_id)
             .input-group.mb-3
               select#selectedIconId.custom-select(name='selectedIcon')
                 option(selected='')
@@ -113,3 +117,20 @@ block content
           .modal-footer
             button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
             button.btn.btn-secondary.new-room-btn(type='submit') Mentés
+
+  // Modal
+  #roomSettingModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='roomSettingModalLabel', aria-hidden='true')
+    .modal-dialog(role='document')
+      .modal-content
+        .modal-header
+          h5#roomSettingModalLabel.modal-title Helyiség módosítása/törlése
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') &times;
+        form(action='/api/updateRoom', method='post')
+          .modal-body
+            input(type='hidden' name='room_id' value=room_id)
+            input#currentRoomName.form-control(name='name' type='text' value='')
+          .modal-footer
+            button.btn.btn-danger.roomDelete-btn(data-id=room_id type='button') Törlés
+            button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
+            button.btn.btn-secondary.update-room-btn(type='submit') Mentés

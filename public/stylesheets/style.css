@@ -158,18 +158,22 @@ a:focus {
 }
 
 /* ---------------------------------------------------
-    Grid Position
+    Room setting button
 ----------------------------------------------------- */
 
-.grid-container {
-    display: grid;
+.roomSetting-btn {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    color: #343a40;
 }
 
-.grid-container--fit {
-    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-}
+/* ---------------------------------------------------
+    Room delete button position
+----------------------------------------------------- */
 
-.grid-element {
-    margin-right: 20px;
-    margin-bottom: 30px;
+.roomDelete-btn {
+    position: fixed;
+    left: 0;
+    margin-left: 10px;
 }

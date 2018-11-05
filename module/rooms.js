@@ -40,5 +40,22 @@ module.exports = {
         });
 
         newRoom.save(callback);
+    },
+
+    /**
+     * ID alapján lekéri az adatbázisból egy szoba adatait!
+     * @param {String} id A kért szoba ID-ja 
+     * @param {*} callback 
+     */
+    getRoomByID: function(id, callback) {
+        rooms.findOne({ _id: id}, callback);
+    },
+
+    updateRoomName: function(id, name, callback) {
+        rooms.updateOne({ _id: id}, { $set: { name: name }}, callback);
+    },
+
+    deleteRoomById: function(id, callback) {
+        rooms.deleteOne({ _id: id}, callback);
     }
 }

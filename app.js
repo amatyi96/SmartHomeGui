@@ -3,16 +3,22 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mqttSocket = require('./module/MqttSocket');
 
 // Modellek beimportálása
 var Rooms = require('./module/rooms');
 var Sensors = require('./module/sensors');
 
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+var mqttClient = new mqttSocket();
+mqttClient.connect(io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,6 +50,10 @@ app.use( (req, res, next) => {
   });
 });
 
+app.get('/tesztSocket', (req, res) => {
+  mqttClient.sendMessage('Szia! °C');
+});
+
 /**
  * API
  * Szoba hozzáadása az adatbázishoz.
@@ -56,11 +66,32 @@ app.post('/api/insertRoom', (req, res) => {
   });
 });
 
+app.post('/api/updateRoom', (req, res) => {
+  Rooms.updateRoomName(req.body.room_id, req.body.name, (err, room) => {
+    //Error kezelés is kéne!
+    res.redirect('/' + req.body.room_id);
+  });
+});
+
+// Szoba lekérdezése ID alapján
+app.get('/api/getRoomByID/:id', (req, res) => {
+  Rooms.getRoomByID(req.params.id, (err, data) => {
+    //Error kezelés is kéne!
+    res.send(data);
+  });
+});
+
+// Szoba törlése ID alapján
+app.get('/api/deleteRoom/:id', (req, res) => {
+  Rooms.deleteRoomById(req.params.id, (err, data) => {
+    //Error kezelés is kéne!
+  });  
+});
+
 // Szenzor beszúrása az adatbázisba!
 app.post('/api/insertSensor', (req, res) => {
   Sensors.insertSensor(req.body.room_id, req.body.sensorName, req.body.selectedIcon, req.body.selectedDuty, (err, room) => {
     //Error kezelés is kéne!
-    
     res.redirect('/' + req.body.room_id);
   });
 });
@@ -75,6 +106,13 @@ app.get('/api/getSensorByID/:id', (req, res) => {
 });
 
 // Szenzorok adatainak módosítása!
+app.post('/api/updateSensor/:id', (req, res) => {
+  Sensors.updateSensor(req.params.id, req.body.sensorName, req.body.selectedIcon, req.body.functionRadioButton, function(err, data) {
+    res.redirect('/' + req.body.room_id);
+  });
+});
+
+// Szenzorok törlése
 app.post('/api/deleteSensor/:id', (req, res) => {
   Sensors.deleteSensorById(req.params.id, function(err, data) {
     //Error kezelés is kéne!
@@ -102,4 +140,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = {
+  app: app,
+  server: server
+}

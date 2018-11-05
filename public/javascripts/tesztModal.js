@@ -22,3 +22,28 @@ $(document).on("click", ".sensorSetting-btn", function () {
         }
     })*/
 });
+
+
+/**
+ * Szoba modal feltöltése adatokkal!
+ */
+$(document).on("click", ".roomSetting-btn", function () {
+    var myRoomId = $(this).data('id');
+
+    $.get( 'http://localhost:3000/api/getRoomByID/' + myRoomId, function( data ) {
+        $('.modal-body #currentRoomName').val(data.name);
+    });
+});
+
+/**
+ * Setting Room Modal - delete room
+ */
+$(document).on("click", ".roomDelete-btn", function () {
+    var myRoomId = $(this).data('id');
+    $('#roomSettingModal').modal('hide');
+    
+
+    $.get( 'http://localhost:3000/api/deleteRoom/' + myRoomId, function() {
+        window.location.assign('/');
+    });
+});

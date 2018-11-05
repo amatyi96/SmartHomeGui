@@ -6,15 +6,14 @@
     ul.list-unstyled.components
         li.list-rooms-group
           each roomName in roomsName
-            a(href=roomName._id) #{roomName.name}
+            a(href=roomName._id) #{roomName.name} 
     button.btn.btn-secondary.editModeItem(id='addRoomButton' type='button' data-toggle='modal' data-target='#addRoomModal')
-      i.fas.fa-plus
+      i.fas.fa-plus 
 
   // Page Content
   #content
     .container-fluid
       block content
-
 
 // Modal
 #addRoomModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addRoomModalLabel', aria-hidden='true')
