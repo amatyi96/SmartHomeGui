@@ -41,9 +41,8 @@ $(document).on("click", ".roomSetting-btn", function () {
 $(document).on("click", ".roomDelete-btn", function () {
     var myRoomId = $(this).data('id');
     $('#roomSettingModal').modal('hide');
-    
 
-    $.get( 'http://localhost:3000/api/deleteRoom/' + myRoomId, function() {
-        window.location.assign('/');
+    $.get( 'http://localhost:3000/api/deleteRoom/' + myRoomId, function(data) {
+        window.location.assign(data);
     });
 });

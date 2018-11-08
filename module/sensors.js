@@ -65,5 +65,9 @@ module.exports = {
 
     deleteSensorById: function(id, callback) {
         sensors.deleteOne({ _id: id}, callback);
+    },
+
+    deleteSensorByRoomId: function(id, callback) {
+        sensors.deleteMany({ room_id: id}, callback);
     }
 }

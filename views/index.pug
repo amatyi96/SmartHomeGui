@@ -7,8 +7,7 @@ block content
       .col-12.col-lg-6.col-xl-4
         .card.text-white.bg-secondary.mb-3(style='max-width: 100%; min-width: 12rem;')
           .card-header
-            //| #{sensor.icon}
-            i.fas.fa-cloud.fa-7x
+            i(class=sensor.icon)
           .card-body
             #temp.h5.card-title
               | 30 °C
@@ -22,6 +21,7 @@ block content
               input(type='hidden' name='room_id' value=room_id)
               button.btn.btn-secondary.sensorDelete-btn(data-id=sensor.id type='submit')
                 i.fas.fa-times
+  i#hum Ide jön majd egy érték!  
     
   //Hozzáad egy újabb sor gridet!
   #plusGridButton.row
@@ -48,12 +48,46 @@ block content
               select#selectedIconId.custom-select(name='selectedIcon')
                 option(selected='')
                   | Választás
-                option(value='1')
-                  | One
-                option(value='2')
-                  | Two
-                option(value='3')
-                  | Three
+                option(value='fas fa-bolt fa-7x')
+                  | Villám
+                option(value='fas fa-cloud fa-7x')
+                  | Felhő
+                option(value='fas fa-cloud-moon fa-7x')
+                  | Felhő-hold
+                option(value='fas fa-cloud-moon-rain fa-7x')
+                  | Felhő-hold-eső
+                option(value='fas fa-cloud-rain fa-7x')
+                  | Felhő-eső
+                option(value='fas fa-cloud-sun fa-7x')
+                  | Felhő-nap
+                option(value='fas fa-cloud-sun-rain fa-7x')
+                  | Felhő-nap-eső
+                option(value='fas fa-eye-dropper fa-7x')
+                  | Színválasztó
+                option(value='fas fa-lightbulb fa-7x')
+                  | Égő-felkapcsolt
+                option(value='far fa-lightbulb fa-7x')
+                  | Égő-lekapcsolt
+                option(value='fas fa-moon fa-7x')
+                  | Hold
+                option(value='fas fa-sliders-h fa-7x')
+                  | Csúszka
+                option(value='fas fa-snowflake fa-7x')
+                  | Hópihe
+                option(value='fas fa-star fa-7x')
+                  | Csillag
+                option(value='fas fa-tachometer-alt fa-7x')
+                  | Mérő
+                option(value='fas fa-temperature-high fa-7x')
+                  | Hőmérő-tele
+                option(value='fas fa-temperature-low fa-7x')
+                  | Hőmérő-alacsony
+                option(value='fas fa-thermometer-empty fa-7x')
+                  | Mérő-üres
+                option(value='fas fa-thermometer-full fa-7x')
+                  | Mérő-tele
+                option(value='fas fa-thermometer-half fa-7x')
+                  | Mérő-félig
               .input-group-append
                 label.input-group-text(for='inputGroupSelect02')
                   | Ikon
@@ -91,12 +125,46 @@ block content
               select#inputGroupSelect02.custom-select(name='selectedIcon')
                 option(selected='')
                   | Választás
-                option(value='1')
-                  | One
-                option(value='2')
-                  | Two
-                option(value='3')
-                  | Three
+                option(value='fas fa-bolt fa-7x')
+                  | Villám
+                option(value='fas fa-cloud fa-7x')
+                  | Felhő
+                option(value='fas fa-cloud-moon fa-7x')
+                  | Felhő-hold
+                option(value='fas fa-cloud-moon-rain fa-7x')
+                  | Felhő-hold-eső
+                option(value='fas fa-cloud-rain fa-7x')
+                  | Felhő-eső
+                option(value='fas fa-cloud-sun fa-7x')
+                  | Felhő-nap
+                option(value='fas fa-cloud-sun-rain fa-7x')
+                  | Felhő-nap-eső
+                option(value='fas fa-eye-dropper fa-7x')
+                  | Színválasztó
+                option(value='fas fa-lightbulb fa-7x')
+                  | Égő-felkapcsolt
+                option(value='far fa-lightbulb fa-7x')
+                  | Égő-lekapcsolt
+                option(value='fas fa-moon fa-7x')
+                  | Hold
+                option(value='fas fa-sliders-h fa-7x')
+                  | Csúszka
+                option(value='fas fa-snowflake fa-7x')
+                  | Hópihe
+                option(value='fas fa-star fa-7x')
+                  | Csillag
+                option(value='fas fa-tachometer-alt fa-7x')
+                  | Mérő
+                option(value='fas fa-temperature-high fa-7x')
+                  | Hőmérő-tele
+                option(value='fas fa-temperature-low fa-7x')
+                  | Hőmérő-alacsony
+                option(value='fas fa-thermometer-empty fa-7x')
+                  | Mérő-üres
+                option(value='fas fa-thermometer-full fa-7x')
+                  | Mérő-tele
+                option(value='fas fa-thermometer-half fa-7x')
+                  | Mérő-félig
               .input-group-append
                 label.input-group-text(for='inputGroupSelect02')
                   | Ikon
@@ -118,7 +186,7 @@ block content
             button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
             button.btn.btn-secondary.new-room-btn(type='submit') Mentés
 
-  // Modal
+  // Update/Delete Room Modal
   #roomSettingModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='roomSettingModalLabel', aria-hidden='true')
     .modal-dialog(role='document')
       .modal-content

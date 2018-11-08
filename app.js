@@ -85,6 +85,11 @@ app.get('/api/getRoomByID/:id', (req, res) => {
 app.get('/api/deleteRoom/:id', (req, res) => {
   Rooms.deleteRoomById(req.params.id, (err, data) => {
     //Error kezelés is kéne!
+
+    Sensors.deleteSensorByRoomId(req.params.id, (err, data) => {
+      //Error kezelés is kéne!
+      res.send("/");
+    });
   });  
 });
 

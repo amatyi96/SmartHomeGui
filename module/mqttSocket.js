@@ -24,12 +24,22 @@ module.exports = class MqttSocket {
     });
 
     // mqtt subscriptions
-    this.mqttClient.subscribe('mytopic', {qos: 0});
+    this.mqttClient.subscribe('/temp', {qos: 0});
+    this.mqttClient.subscribe('/hum', {qos: 0});
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
-      console.log(message.toString());
-      io.emit("temp", message.toString());
+      if( topic === "/temp") {
+        console.log(message.toString());
+        io.emit("temp", message.toString());
+      }
+    });
+
+    this.mqttClient.on('message', function (topic, message) {
+      if( topic === "/hum") {
+        console.log(message.toString());
+        io.emit("hum", message.toString());
+      }
     });
 
     this.mqttClient.on('close', () => {

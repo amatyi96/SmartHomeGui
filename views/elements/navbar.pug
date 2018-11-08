@@ -4,4 +4,5 @@ nav.navbar.navbar-dark.bg-dark.fixed-top
     i.fas.fa-align-justify
   a.navbar-brand(href='#') SmartHomeGui
   #editModeToggleDiv
-    input(id='editModeToggle', type='checkbox', checked='', data-toggle='toggle')
+    span.d-inline-block(tabindex='0', data-toggle='tooltip', title='Ide kattintva be/ki kapcsolhatod a szerkesztő módot!')
+      input(id='editModeToggle' type='checkbox' data-toggle='toggle' data-offstyle='danger' data-on="<i class='fas fa-cog'></i>" data-off="<i class='fas fa-cog'></i>")

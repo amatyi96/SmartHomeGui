@@ -67,6 +67,11 @@ a:focus {
     background: #fff;
 }
 
+.active {
+    color: #343a40;
+    background: #fff;
+}
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -176,4 +181,17 @@ a:focus {
     position: fixed;
     left: 0;
     margin-left: 10px;
+}
+
+
+/* ---------------------------------------------------
+    Edit mode
+----------------------------------------------------- */
+
+#editModeToggleDiv :focus {
+    outline: 0;
+}
+
+.editModeItem {
+    display: none;
 }
