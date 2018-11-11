@@ -3,7 +3,17 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
 var mqttSocket = require('./module/MqttSocket');
+
+//Csatlakozás az adatbázishoz!
+mongoose.connect('mongodb://localhost:27017/SmartHomeGui', { useNewUrlParser: true }, (err) => {
+  if (err) {
+    console.log("Nem sikerült csatlakozni az adatbázishoz!");
+  } else {
+    console.log("Sikeres csatlakozás az adatbázishoz!");
+  }
+});
 
 // Modellek beimportálása
 var Rooms = require('./module/rooms');

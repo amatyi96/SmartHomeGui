@@ -1,9 +1,7 @@
 /**
- * Szenor model!
- * Csatlakozás az adatbázishoz.
+ * Szenzor model!
  */
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/SmartHomeGui');
 
 /**
  * Schema létrehozása mongoose segítségével, ami leír egy modelt!

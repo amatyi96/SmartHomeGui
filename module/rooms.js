@@ -1,9 +1,7 @@
 /**
  * Szoba model!
- * Csatlakozás az adatbázishoz.
  */
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/SmartHomeGui');
 
 /**
  * Schema létrehozása mongoose segítségével, ami leír egy modelt!
