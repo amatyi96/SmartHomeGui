@@ -127,6 +127,16 @@ app.post('/api/updateSensor/:id', (req, res) => {
   });
 });
 
+// Szenzor kártya módosítása. (Méret és pozició)!
+app.post('/api/updateSensorCard', (req, res) => {
+  var updateData = JSON.parse(req.body.data);
+  for( var i  = 0; i < updateData.length; i++) {
+    Sensors.updateSensorCard(updateData[i].id, updateData[i].x, updateData[i].y, updateData[i].width, updateData[i].height, function(err, data) {
+      console.log("Sikeres kérés!");      
+    });
+  }
+});
+
 // Szenzorok törlése
 app.post('/api/deleteSensor/:id', (req, res) => {
   Sensors.deleteSensorById(req.params.id, function(err, data) {

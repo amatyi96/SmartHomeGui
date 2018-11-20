@@ -10,7 +10,13 @@ var sensorSchema = mongoose.Schema({
     room_id: String,
     name: String,
     icon: String,
-    duty: String
+    duty: String,
+    position: {
+        x: { type: String, default: 0 },
+        y: { type: String, default: 0 },
+        width: { type: String, default: 3 },
+        height: { type: String, default: 3 }
+    }
 });
 
 /**
@@ -59,6 +65,10 @@ module.exports = {
 
     updateSensor: function(id, name, icon, duty, callback) {
         sensors.updateOne({ _id: id }, { $set: { name: name, icon: icon, duty, duty}}, callback);
+    },
+
+    updateSensorCard: function(id, x, y, width, height, callback) {
+        sensors.updateOne({ _id: id}, { $set: { position: { x: x, y: y, width: width, height: height}}}, callback);
     },
 
     deleteSensorById: function(id, callback) {

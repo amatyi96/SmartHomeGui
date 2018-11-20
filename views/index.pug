@@ -2,10 +2,10 @@ extends layout
 
 block content
   //Grid
-  .row
+  .grid-stack
     each sensor in sensors
-      .col-12.col-lg-6.col-xl-4
-        .card.text-white.bg-secondary.mb-3(style='max-width: 100%; min-width: 12rem;')
+      .grid-stack-item(data-gs-id=sensor.id data-gs-x=sensor.position.x data-gs-y=sensor.position.y data-gs-width=sensor.position.width data-gs-height=sensor.position.height data-gs-min-width="3")    
+        .grid-stack-item-content.card.text-white.bg-secondary.mb-3(style='max-width: 100%; min-width: 12rem;')
           .card-header
             i(class=sensor.icon)
           .card-body
@@ -13,6 +13,7 @@ block content
               | 30 °C
             p.card-text
               | Utolsó frissités: 16:40
+          .tesztDiv(style='height: 100%;')
           .card-footer.card-footer-settingIcon.editModeItem
             button.btn.btn-secondary.sensorSetting-btn(data-id=sensor.id type='button' data-toggle='modal' data-target='#sensorSettingModal')
               i.fas.fa-wrench
@@ -21,7 +22,9 @@ block content
               input(type='hidden' name='room_id' value=room_id)
               button.btn.btn-secondary.sensorDelete-btn(data-id=sensor.id type='submit')
                 i.fas.fa-times
-  i#hum Ide jön majd egy érték!  
+          
+  a#save-grid.btn.btn-default(href='#') Save Grid
+  
     
   //Hozzáad egy újabb sor gridet!
   #plusGridButton.row
