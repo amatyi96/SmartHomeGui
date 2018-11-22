@@ -9,8 +9,10 @@ const mongoose = require('mongoose');
 var sensorSchema = mongoose.Schema({
     room_id: String,
     name: String,
+    mqttLink: String,
     icon: String,
-    duty: String,
+    nameDisplay: { type: Boolean, default: true},
+    listDuty: Array,
     position: {
         x: { type: String, default: 0 },
         y: { type: String, default: 0 },
@@ -38,18 +40,18 @@ module.exports = {
 
     /**
      * Beszúr az adatbázisba egy új szenzort!
-     * @param {*} room_id Aktuális szoba ID-ja
-     * @param {*} name Szenzor neve
+     * @param {String} room_id Aktuális szoba ID-ja
+     * @param {String} name Szenzor neve
+     * @param {String} mqttLink Mqtt link
      * @param {*} icon Szenzor ikonja
-     * @param {*} duty Funkcionalitása
      * @param {*} callback 
      */
-    insertSensor: function(room_id, name, icon, duty, callback) {
+    insertSensor: function(room_id, name, mqttLink, icon, callback) {
         var newSensor = new sensors({
             room_id: room_id,
             name: name,
+            mqttLink: mqttLink,
             icon: icon,
-            duty: duty,
         });
 
         newSensor.save(callback);
@@ -69,6 +71,10 @@ module.exports = {
 
     updateSensorCard: function(id, x, y, width, height, callback) {
         sensors.updateOne({ _id: id}, { $set: { position: { x: x, y: y, width: width, height: height}}}, callback);
+    },
+
+    updateSensorDuty: function(id, nameDisplay, newDuty, callback) {
+        sensors.updateOne({ _id: id}, { $set: { nameDisplay: nameDisplay }, $push: { listDuty: newDuty }}, callback);   
     },
 
     deleteSensorById: function(id, callback) {

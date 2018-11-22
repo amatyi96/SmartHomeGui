@@ -140,17 +140,20 @@ a:focus {
 }
 
 /* ---------------------------------------------------
-    Plus Grid Button
+    Panel kezelő gombok
 ----------------------------------------------------- */
 
-#plusGridButton {
+.buttonGroup {
+    margin-top: 50px;
     text-align: center;
 }
 
-.addNewSensor-btn {
-    background: none;
-    border: none;
-    color: #6c757d;
+#save-grid {
+    margin-right: 10px;
+}
+
+#add-chart {
+    margin-left: 10px;
 }
 
 /* ---------------------------------------------------
@@ -196,10 +199,66 @@ a:focus {
     display: none;
 }
 
+.sensorAddDuty-btn {
+    color: #ffc107;
+}
+
 /* ---------------------------------------------------
     Gridstack overflow hidden
 ----------------------------------------------------- */
 
 .grid-stack-item-content {
     overflow: hidden !important;
+}
+
+/* ---------------------------------------------------
+    Új szenzor Modal
+----------------------------------------------------- */
+
+.modalNameInput {
+    margin-bottom: 15px;
+}
+
+.modalMqttLinkInput {
+    margin-bottom: 15px;
+}
+
+.modalSpanIkon {
+    margin-bottom: 7px;
+}
+
+.wantIconCheckBox {
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.modalRadio1 {
+    padding-top: 8px;
+    margin-right: 10px;
+}
+
+.modalRadio2 {
+    padding-top: 5px;
+    margin-left: 10px;
+}
+
+#modalIconPicker {
+    position: absolute;
+    left: 7%;
+}
+
+#modalSpanCheckboxIcon{
+    margin-right: 40px;
+}
+
+/* ---------------------------------------------------
+    Funkció Modal
+----------------------------------------------------- */
+
+.wantNameRadio {
+    margin-bottom: 15px;
+}
+
+#addDutySpanName {
+    margin-right: 10rem;
 }

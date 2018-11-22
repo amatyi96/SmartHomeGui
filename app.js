@@ -76,6 +76,9 @@ app.post('/api/insertRoom', (req, res) => {
   });
 });
 
+/**
+ * Szoba frissítése
+ */
 app.post('/api/updateRoom', (req, res) => {
   Rooms.updateRoomName(req.body.room_id, req.body.name, (err, room) => {
     //Error kezelés is kéne!
@@ -105,8 +108,18 @@ app.get('/api/deleteRoom/:id', (req, res) => {
 
 // Szenzor beszúrása az adatbázisba!
 app.post('/api/insertSensor', (req, res) => {
-  Sensors.insertSensor(req.body.room_id, req.body.sensorName, req.body.selectedIcon, req.body.selectedDuty, (err, room) => {
+  var icon = req.body.newSensorIcon + " " + req.body.iconSizeCheckbox;
+
+  if(req.body.newSensorIcon === '' || req.body.iconSizeCheckbox === undefined) {
+    icon = req.body.newSensorIcon
+  }
+
+  Sensors.insertSensor(req.body.room_id, req.body.sensorName, req.body.mqttLink, icon, (err, room) => {
     //Error kezelés is kéne!
+    console.log(req.body.room_id);
+    console.log(req.body.sensorName);
+    console.log(req.body.mqttLink);
+    console.log(icon);
     res.redirect('/' + req.body.room_id);
   });
 });
@@ -124,6 +137,15 @@ app.get('/api/getSensorByID/:id', (req, res) => {
 app.post('/api/updateSensor/:id', (req, res) => {
   Sensors.updateSensor(req.params.id, req.body.sensorName, req.body.selectedIcon, req.body.functionRadioButton, function(err, data) {
     res.redirect('/' + req.body.room_id);
+  });
+});
+
+// Funkció hozzáadása egy szenzorhoz
+app.post('/api/addDuty', (req, res) => {
+  console.log(req.body);
+  //res.send('Sikeres post');
+  Sensors.updateSensorDuty(req.body.sensor_id, req.body.displayName, req.body.selectedDuty, function(err, data) {
+    res.send("Siker");
   });
 });
 

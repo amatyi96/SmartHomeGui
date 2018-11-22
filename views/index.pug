@@ -6,13 +6,29 @@ block content
     each sensor in sensors
       .grid-stack-item(data-gs-id=sensor.id data-gs-x=sensor.position.x data-gs-y=sensor.position.y data-gs-width=sensor.position.width data-gs-height=sensor.position.height data-gs-min-width="3")    
         .grid-stack-item-content.card.text-white.bg-secondary.mb-3(style='max-width: 100%; min-width: 12rem;')
-          .card-header
+          .card-header.checkCardHeader
             i(class=sensor.icon)
           .card-body
-            #temp.h5.card-title
-              | 30 °C
+            if sensor.nameDisplay
+              #temp.h5.card-title #{sensor.nameDisplay}
             p.card-text
+              each duty in sensor.listDuty
+                .tesztDiv2
+                  if duty == '1'
+                    | Megjelenítés
+                  if duty == '2'
+                    #cp13.input-group
+                      input.form-control.input-lg(type='text', value='I am an invalid color')
+                      span.input-group-append
+                        span.input-group-text.colorpicker-input-addon
+                          i
+                  if duty == '3'
+                    input(type='checkbox', checked='', data-toggle='toggle', data-on='Ready', data-off='Not Ready', data-onstyle='success', data-offstyle='danger')
+                  if duty == '4'
+                    input#sensorDutySlider(data-slider-id='sensorSlider', type='text', data-slider-min='0', data-slider-max='20', data-slider-step='1', data-slider-value='14')
               | Utolsó frissités: 16:40
+            button.btn.btn-secondary.sensorAddDuty-btn.editModeItem(data-id=sensor.id type='button' data-toggle='modal' data-target='#addDutyModal')
+              i.fas.fa-cogs
           .tesztDiv(style='height: 100%;')
           .card-footer.card-footer-settingIcon.editModeItem
             button.btn.btn-secondary.sensorSetting-btn(data-id=sensor.id type='button' data-toggle='modal' data-target='#sensorSettingModal')
@@ -22,15 +38,19 @@ block content
               input(type='hidden' name='room_id' value=room_id)
               button.btn.btn-secondary.sensorDelete-btn(data-id=sensor.id type='submit')
                 i.fas.fa-times
-          
-  a#save-grid.btn.btn-default(href='#') Save Grid
+  form.range-field
+    input(type='range', min='0', max='100')
   
-    
-  //Hozzáad egy újabb sor gridet!
-  #plusGridButton.row
-    .col-sm
-      button.btn.btn-secondary.editModeItem.addNewSensor-btn(type='button' data-toggle='modal' data-target='#addNewSensorModal')
-        i.fas.fa-plus.fa-3x
+  .ct-chart.ct-golden-section
+
+  // Panel kezelő gombok              
+  .buttonGroup
+    button.btn.btn-outline-secondary.editModeItem(id='save-grid' type='button')
+      i.fas.fa-save
+    button.btn.btn-secondary.editModeItem(id='add-grid' type='button' data-toggle='modal' data-target='#addNewSensorModal')
+      i.fas.fa-plus
+    button.btn.btn-primary.editModeItem(id='add-chart' type='button')
+      i.far.fa-chart-bar
 
   //Szoba törlés és módosítása!
   button.btn.btn-link.editModeItem.roomSetting-btn(data-id=room_id  type='button'  data-toggle='modal' data-target='#roomSettingModal')
@@ -124,70 +144,26 @@ block content
         form(action='/api/insertSensor' method='post')
           .modal-body
             input(type='hidden' name='room_id' value=room_id)
-            .input-group.mb-3
-              select#inputGroupSelect02.custom-select(name='selectedIcon')
-                option(selected='')
-                  | Választás
-                option(value='fas fa-bolt fa-7x')
-                  | Villám
-                option(value='fas fa-cloud fa-7x')
-                  | Felhő
-                option(value='fas fa-cloud-moon fa-7x')
-                  | Felhő-hold
-                option(value='fas fa-cloud-moon-rain fa-7x')
-                  | Felhő-hold-eső
-                option(value='fas fa-cloud-rain fa-7x')
-                  | Felhő-eső
-                option(value='fas fa-cloud-sun fa-7x')
-                  | Felhő-nap
-                option(value='fas fa-cloud-sun-rain fa-7x')
-                  | Felhő-nap-eső
-                option(value='fas fa-eye-dropper fa-7x')
-                  | Színválasztó
-                option(value='fas fa-lightbulb fa-7x')
-                  | Égő-felkapcsolt
-                option(value='far fa-lightbulb fa-7x')
-                  | Égő-lekapcsolt
-                option(value='fas fa-moon fa-7x')
-                  | Hold
-                option(value='fas fa-sliders-h fa-7x')
-                  | Csúszka
-                option(value='fas fa-snowflake fa-7x')
-                  | Hópihe
-                option(value='fas fa-star fa-7x')
-                  | Csillag
-                option(value='fas fa-tachometer-alt fa-7x')
-                  | Mérő
-                option(value='fas fa-temperature-high fa-7x')
-                  | Hőmérő-tele
-                option(value='fas fa-temperature-low fa-7x')
-                  | Hőmérő-alacsony
-                option(value='fas fa-thermometer-empty fa-7x')
-                  | Mérő-üres
-                option(value='fas fa-thermometer-full fa-7x')
-                  | Mérő-tele
-                option(value='fas fa-thermometer-half fa-7x')
-                  | Mérő-félig
-              .input-group-append
-                label.input-group-text(for='inputGroupSelect02')
-                  | Ikon
-            input.form-control(name='sensorName' type='text' placeholder='Szenzor neve')
-            .functionCheckBox
-              .custom-control.custom-checkbox
-                input#valueStringCheckBox.custom-control-input(name='selectedDuty' type='radio' value='1')
-                label.custom-control-label(for='valueStringCheckBox') Megjelenítés
-              .custom-control.custom-checkbox
-                input#switchCheckBox.custom-control-input(name='selectedDuty' type='radio' value='2')
-                label.custom-control-label(for='switchCheckBox') Kapcsoló
-              .custom-control.custom-checkbox
-                input#sliderCheckBox.custom-control-input(name='selectedDuty' type='radio' value='3')
-                label.custom-control-label(for='sliderCheckBox') Csuszka
-              .custom-control.custom-checkbox
-                input#colorPickerCheckBox.custom-control-input(name='selectedDuty' type='radio' value='4')
-                label.custom-control-label(for='colorPickerCheckBox')  Színválasztó
+            input.form-control.modalNameInput(name='sensorName' type='text' placeholder='Szenzor neve' required)
+            input.form-control.modalMqttLinkInput(name='mqttLink' type='text' placeholder='Feliratkozási link' required)
+            .modalSpanIkon
+              span.label.label-default Ikon megjelenítése:
+            .wantIconCheckBox
+              input.newSensorIconInput(type='hidden' name='newSensorIcon' value='')
+              button#modalIconPicker.btn.btn-secondary(data-icon='', role='iconpicker')
+              span#modalSpanCheckboxIcon.label.label-default Méret:
+              .custom-control.custom-radio.custom-control-inline.modalRadio1
+                input.custom-control-input(id='3xIcon' name='iconSizeCheckbox' type='radio' value='fa-3x')
+                label.custom-control-label(for='3xIcon') 3x
+              .custom-control.custom-radio.custom-control-inline.modalRadio2
+                input.custom-control-input(id='5xIcon' name='iconSizeCheckbox' type='radio' value='fa-5x')
+                label.custom-control-label(for='5xIcon') 5x
+              .custom-control.custom-radio.custom-control-inline.modalRadio3
+                input.custom-control-input(id='7xIcon' name='iconSizeCheckbox' type='radio' value='fa-7x')
+                label.custom-control-label(for='7xIcon') 7x
           .modal-footer
             button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
-            button.btn.btn-secondary.new-room-btn(type='submit') Mentés
+            button.btn.btn-secondary(type='submit') Mentés
 
   // Update/Delete Room Modal
   #roomSettingModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='roomSettingModalLabel', aria-hidden='true')
@@ -205,3 +181,32 @@ block content
             button.btn.btn-danger.roomDelete-btn(data-id=room_id type='button') Törlés
             button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
             button.btn.btn-secondary.update-room-btn(type='submit') Mentés
+  
+  // Add duty to sensor Modal
+  #addDutyModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addDutyModalLabel' aria-hidden='true')
+    .modal-dialog(role='document')
+      .modal-content
+        .modal-header
+          h5#addDutyModalLabel.modal-title Funkció hozzáadása
+          button.close(type='button' data-dismiss='modal' aria-label='Close')
+            span(aria-hidden='true') &times;
+        form(action='/api/addDuty', method='post')
+          .modal-body
+            input(id='addDuty_sensor_id' type='hidden' name='sensor_id' value='')
+            .custom-control.custom-checkbox.wantNameRadio
+              span#addDutySpanName.label.label-default Név megjelenítés:
+              input(id='displayNameInputHide' type='hidden' name='displayName' value='')
+              input.custom-control-input(id='displayName' type='checkbox')
+              label.custom-control-label(for='displayName') Igen/Nem
+            .input-group.mb-3
+              .input-group-prepend
+                label.input-group-text(for='dutySelectDropdown') Funkció
+              select#dutySelectDropdown.custom-select(name='selectedDuty')
+                option(selected='') Kiválasztás...
+                option(value='1') Szöveg megjelenítés
+                option(value='2') Színválasztó
+                option(value='3') Kapcsoló
+                option(value='4') Csúszka
+          .modal-footer
+            button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
+            button.btn.btn-secondary(type='submit') Mentés

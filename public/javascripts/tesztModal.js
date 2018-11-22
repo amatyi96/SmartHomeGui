@@ -10,17 +10,6 @@ $(document).on("click", ".sensorSetting-btn", function () {
         $('.modal-body #sensorNameId').val(data.name);
         $('.modal-body #functionRadioButton-' + data.duty).prop('checked', true);
     });
-
-    /*$.ajax({
-        url: "http://localhost:3000/api/getSensorByID/" + "5bd6150cf3608d32a40e876d",
-        type: "GET",
-        success: function(result) {
-            console.log(result);
-        },
-        error: function(error) {
-            console.log('${error}')
-        }
-    })*/
 });
 
 
@@ -45,4 +34,10 @@ $(document).on("click", ".roomDelete-btn", function () {
     $.get( 'http://localhost:3000/api/deleteRoom/' + myRoomId, function(data) {
         window.location.assign(data);
     });
+});
+
+$(document).on("click", ".sensorAddDuty-btn", function () {
+    var mySensorId = $(this).data('id');
+    console.log(mySensorId);
+    $('.modal-body #addDuty_sensor_id').val(mySensorId);
 });
