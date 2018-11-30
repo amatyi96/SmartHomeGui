@@ -8,13 +8,20 @@ editModeToggle.onclick = function() {
     var editModeItem = document.getElementsByClassName('editModeItem');
     grid = $('.grid-stack').data('gridstack');
 
-    for(var i = 0; i < editModeItem.length; i++) {
-        if(editModeToggleValue) {
-            editModeItem[i].style.display = "none";
-            grid.disable();
-        } else {
-            editModeItem[i].style.display = "initial";
-            grid.enable();
-        }
+    if(editModeToggleValue && grid) {
+        grid.disable();
+    } else if(grid) {
+        grid.enable();
     }
+
+    Array.prototype.forEach.call( editModeItem, function(element) {
+        if(editModeToggleValue) {
+            element.style.display = "none";
+        } else {
+            element.style.display = "initial";
+        }
+    });
+
+    calculateWrongHeight();
 };
+

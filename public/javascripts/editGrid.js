@@ -1,7 +1,7 @@
 $(function () {
   var options = {
-    cellHeight: '100',
-    minWidth: '1000',
+    cellHeight: '40',
+    minWidth: '950',
     verticalMargin: 10,
     disableDrag: true,
     disableResize: true
@@ -20,8 +20,9 @@ $(function () {
         height: node.height
       };
     }, this);
-    
-    $.post( 'http://localhost:3000/api/updateSensorCard', {'data': JSON.stringify(this.serializedData)}, function( data ) {
+
+    var window_mode = checkWindowSize();
+    $.post( 'http://localhost:3000/api/updateSensorCard', {'data': JSON.stringify(this.serializedData), 'window_mode': window_mode}, function( data ) {
         console.log(data);
     });
     
@@ -30,72 +31,215 @@ $(function () {
   $('#save-grid').click(this.saveGrid);
 });
 
+// Leellenőrzi az aktuális böngésző ablak méretét
+function checkWindowSize() {
+  var window_width = window.innerWidth;
+
+  if(window_width > 1200 && window_width < 1450) {
+    return "3columns";
+  } else if( window_width < 1200) {
+    return "2columns";
+  } else {
+    return "normal";
+  }
+}
+
+// Lekérdezi az összes szenzor adatait
+var allSensors = $.get('http://localhost:3000/api/getAllSensor');
+
 $(document).ready( function() {
+  var window_width = window.innerWidth;
   var grid = $('.grid-stack').data('gridstack');
 
-  $('.grid-stack-item').each(function() {
-    var gridstackItemContentHeight = $(this).find('.grid-stack-item-content')[0].scrollHeight + $('.grid-stack').data('gridstack').opts.verticalMargin;
-    var plusDivHeight = $(this).find('.tesztDiv').height() + $('.grid-stack').data('gridstack').opts.verticalMargin;
-    var minHeight = Math.ceil((gridstackItemContentHeight - plusDivHeight)  / ($('.grid-stack').data('gridstack').cellHeight() + $('.grid-stack').data('gridstack').opts.verticalMargin));
+  // Ha nem OneColumnMode-ba vagyunk!
+  if(grid) {
+    // Betöltéskor meg kell vizsgálni, hogy minden kártya megfelelő méretű, ha nem akkor beállítjuk.
+    $('.grid-stack-item').each(function() {
+      var gridstackItemContentHeight = $(this).find('.grid-stack-item-content')[0].scrollHeight + $('.grid-stack').data('gridstack').opts.verticalMargin;
+      var plusDivHeight = $(this).find('.tesztDiv').height() + $('.grid-stack').data('gridstack').opts.verticalMargin;
+      var minHeight = Math.ceil((gridstackItemContentHeight - plusDivHeight)  / ($('.grid-stack').data('gridstack').cellHeight() + $('.grid-stack').data('gridstack').opts.verticalMargin));
 
-    grid.minHeight($(this), minHeight);
-    grid.resize($(this), null, minHeight);
-  });
+      if($(this).attr("data-gs-height") < minHeight) {
+        grid.minHeight($(this), minHeight);
+        grid.resize($(this), null, minHeight);
+      }
+    }); 
+
+    // Megvizsgáljuk az oldal betöltésekor, hogy mekkora a böngésző mérete és az alapján töltjük be az oldalt.
+    allSensors.done( function(sensors) {
+      if(window_width > 1200 && window_width < 1450) {
+        // Megvizsgáljuk, hogy volt-e már 3 oszlopos módban mentés! 
+        var is3ColActive = sensors.some( function(sensor) {
+          if(sensor.position_3col_active) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        if(is3ColActive) {
+          console.log("3 column adatbázisból");
+
+          sensors.forEach( sensor => {
+            $('.grid-stack-item').each(function() {
+              if($(this).attr('data-gs-id') == sensor._id) {
+                grid.update($(this), sensor.position_3col.x, sensor.position_3col.y, sensor.position_3col.width, sensor.position_3col.height);
+              }
+            });
+          });
+        } else {
+          console.log("3 column rendezéssel");
+
+          $('.grid-stack-item').each(function() {
+            grid.minWidth($(this), 4);
+            grid.resize($(this), 4, null);
+          });
+
+          threeColumnMode();
+        }    
+      } else if( window_width > 950 && window_width < 1200) {
+        // Megvizsgáljuk, hogy volt-e már 2 oszlopos módban mentés! 
+        var is2ColActive = sensors.some( function(sensor) {
+          if(sensor.position_2col_active) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        if(is2ColActive) {
+          console.log("2 column adatbázisból");
+
+          sensors.forEach( sensor => {
+            $('.grid-stack-item').each(function() {
+              if($(this).attr('data-gs-id') == sensor._id) {
+                console.log(sensor.position_2col.x);
+                grid.update($(this), sensor.position_2col.x, sensor.position_2col.y, sensor.position_2col.width, sensor.position_2col.height);
+              }
+            });
+          });
+        } else {
+          console.log("2 column rendezéssel");
+
+          $('.grid-stack-item').each(function() {
+            grid.minWidth($(this), 6);
+            grid.resize($(this), 6, null);
+          });
+
+          twoColumnMode();
+        }
+      }
+    });
+  }
 });
 
 $('.grid-stack .grid-stack-item').on('resize', function (event, content) {
   var grid = $('.grid-stack').data('gridstack');
 
-  var gridstackItemContentHeight = $(this).find('.grid-stack-item-content')[0].scrollHeight + $('.grid-stack').data('gridstack').opts.verticalMargin;
-  var plusDivHeight = $(this).find('.tesztDiv').height() + $('.grid-stack').data('gridstack').opts.verticalMargin;
-  var minHeight = Math.ceil((gridstackItemContentHeight - plusDivHeight)  / ($('.grid-stack').data('gridstack').cellHeight() + $('.grid-stack').data('gridstack').opts.verticalMargin));
+  // Ha van grid
+  if(grid) {
+    var gridstackItemContentHeight = $(this).find('.grid-stack-item-content')[0].scrollHeight + $('.grid-stack').data('gridstack').opts.verticalMargin;
+    var plusDivHeight = $(this).find('.tesztDiv').height() + $('.grid-stack').data('gridstack').opts.verticalMargin;
+    var minHeight = Math.ceil((gridstackItemContentHeight - plusDivHeight)  / ($('.grid-stack').data('gridstack').cellHeight() + $('.grid-stack').data('gridstack').opts.verticalMargin));
   
-  grid.minHeight($(this), minHeight);
-});
-
-
-$(window).resize(function() {
-  var window_width = $(window).width();
-
-  if(window_width > 1000 && window_width < 1350) {
-    twoColumnMode();
+    grid.minHeight($(this), minHeight);
   }
 });
 
-twoColumnMode = function() {
-  var grid = $('.grid-stack').data('gridstack');
-  var area = new Area();
+// Megjegyezzük az elöző böngésző ablak méretét, hogy biztos csak akkor történjen változás, ha az ablakot méreteztük!
+var last_window_width = $(window).width();
 
-  $('.grid-stack-item').each(function() {
-    if($(this).attr("data-gs-width") <= 5) {
-      grid.minWidth($(this), 4);
-      grid.resize($(this), 4, null);
+// Ha az ablakot méretezzük, akkor is váltson módot, illetve vissza!;
+$(window).resize( function() {
+  var window_width = window.innerWidth;
+
+  if(last_window_width != window_width) {
+    var grid = $('.grid-stack').data('gridstack');
+
+    if(grid) {
+      allSensors.done( function(sensors) {
+        
+        if(window_width > 1200 && window_width < 1450) {
+          // Megvizsgáljuk, hogy volt-e már 3 oszlopos módban mentés! 
+          var is3ColActive = sensors.some( function(sensor) {
+            if(sensor.position_3col_active) {
+              return true;
+            } else {
+              return false;
+            }
+          });
+
+          if(is3ColActive) {
+            console.log("3 column adatbázisból");
+
+            sensors.forEach( sensor => {
+              $('.grid-stack-item').each(function() {
+                if($(this).attr('data-gs-id') == sensor._id) {
+                  grid.minWidth($(this), 4);
+                  grid.update($(this), sensor.position_3col.x, sensor.position_3col.y, sensor.position_3col.width, sensor.position_3col.height);
+                }
+              });
+            });
+          } else {
+            console.log("3 column rendezéssel");
+
+            $('.grid-stack-item').each(function() {
+              grid.minWidth($(this), 4);
+              grid.resize($(this), 4, null);
+            });
+
+            threeColumnMode();
+          }    
+        } else if( window_width > 950 && window_width < 1200) {
+          // Megvizsgáljuk, hogy volt-e már 2 oszlopos módban mentés! 
+          var is2ColActive = sensors.some( function(sensor) {
+            if(sensor.position_2col_active) {
+              return true;
+            } else {
+              return false;
+            }
+          });
+
+          if(is2ColActive) {
+            console.log("2 column adatbázisból");
+
+            sensors.forEach( sensor => {
+              $('.grid-stack-item').each(function() {
+                if($(this).attr('data-gs-id') == sensor._id) {
+                  grid.minWidth($(this), 6);
+                  grid.update($(this), sensor.position_2col.x, sensor.position_2col.y, sensor.position_2col.width, sensor.position_2col.height);
+                }
+              });
+            });
+          } else {
+            console.log("2 column rendezéssel");
+
+            $('.grid-stack-item').each(function() {
+              grid.minWidth($(this), 6);
+              grid.resize($(this), 6, null);
+            });
+
+            twoColumnMode();
+          }
+        } else {
+          sensors.forEach( sensor => {
+            $('.grid-stack-item').each(function() {
+              if($(this).attr('data-gs-id') == sensor._id) {
+                grid.minWidth($(this), 3);
+                grid.update($(this), sensor.position.x, sensor.position.y, sensor.position.width, sensor.position.height);
+              }
+            });
+          });
+        }
+      });
     }
-    
+    last_window_width = window_width;
+  }
+});
 
-    var x = 0;
-    var y = 0;
-    var width = $(this).attr("data-gs-width");
-    var height = $(this).attr("data-gs-height");
-    
-    while( !area.isAreaEmpty(x, y, width, height)) {
-      x++;
-
-      if( x > 12) {
-        y++;
-        x = 0;
-      }
-    }
-    
-    console.log("Beszúrás történ a következő helyre: ");
-    grid.update($(this), x, y, width, height);
-    console.log("X: " + x);
-    console.log("Y: " + y);
-    console.log("Width: " + width);
-    console.log("Height: " + height);
-  });
-}
-
+/**
+ * Grid számítások
+ */
 function Grid(id, x, y, width, height) {
   this.id = id;
   this.x = x;
@@ -134,4 +278,75 @@ Area.prototype.isAreaEmpty = function(x, y, width, height) {
   } else {
     return false;
   }
+}
+
+
+twoColumnMode = function() {
+  var grid = $('.grid-stack').data('gridstack');
+  var area = new Area();
+
+  $('.grid-stack-item').each(function() {
+    if($(this).attr("data-gs-width") <= 6) {
+      grid.minWidth($(this), 6);
+      grid.resize($(this), 6, null);
+    }
+
+    var x = 0;
+    var y = 0;
+    var width = $(this).attr("data-gs-width");
+    var height = $(this).attr("data-gs-height");
+    
+    while( !area.isAreaEmpty(x, y, width, height)) {
+      x++;
+
+      if( x > 12) {
+        y++;
+        x = 0;
+      }
+    }
+
+    grid.update($(this), x, y, width, height);
+  });
+}
+
+
+threeColumnMode = function() {
+  var grid = $('.grid-stack').data('gridstack');
+  var area = new Area();
+
+  $('.grid-stack-item').each(function() {
+    if($(this).attr("data-gs-width") <= 6) {
+      grid.minWidth($(this), 4);
+      grid.resize($(this), 4, null);
+    }
+    
+    var x = 0;
+    var y = 0;
+    var width = $(this).attr("data-gs-width");
+    var height = $(this).attr("data-gs-height");
+    
+    while( !area.isAreaEmpty(x, y, width, height)) {
+      x++;
+
+      if( x > 12) {
+        y++;
+        x = 0;
+      }
+    }
+
+    grid.update($(this), x, y, width, height);
+  });
+}
+
+function calculateWrongHeight() {
+  $('.grid-stack-item').each(function() {
+    var gridstackItemContentHeight = $(this).find('.grid-stack-item-content')[0].scrollHeight + $('.grid-stack').data('gridstack').opts.verticalMargin;
+    var plusDivHeight = $(this).find('.tesztDiv').height() + $('.grid-stack').data('gridstack').opts.verticalMargin;
+    var minHeight = Math.ceil((gridstackItemContentHeight - plusDivHeight)  / ($('.grid-stack').data('gridstack').cellHeight() + $('.grid-stack').data('gridstack').opts.verticalMargin));
+
+    if( $(this).attr("data-gs-height") < minHeight ) {
+      grid.minHeight($(this), minHeight);
+      grid.resize($(this), null, minHeight);
+    }
+  });
 }

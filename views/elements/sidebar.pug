@@ -7,9 +7,9 @@
         li.list-rooms-group
           each roomName in roomsName
             if(room_id == roomName._id)
-              a.active(href=roomName._id) #{roomName.name}
+              a.active(href='room/' + roomName._id) #{roomName.name}
             else
-              a(href=roomName._id) #{roomName.name}
+              a(href='room/' + roomName._id) #{roomName.name}
     button.btn.btn-secondary.editModeItem(id='addRoomButton' type='button' data-toggle='modal' data-target='#addRoomModal')
       i.fas.fa-plus
 

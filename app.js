@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
-var mqttSocket = require('./module/MqttSocket');
+var webSocket = require('./module/webSocket');
 
 //Csatlakozás az adatbázishoz!
 mongoose.connect('mongodb://localhost:27017/SmartHomeGui', { useNewUrlParser: true }, (err) => {
@@ -21,14 +21,16 @@ var Sensors = require('./module/sensors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var automationRouter = require('./routes/automation');
 
 var app = express();
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var mqttClient = new mqttSocket();
-mqttClient.connect(io);
+//var mqttClient = new mqttSocket();
+//mqttClient.connect(io);
+webSocket.setIO(io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -58,10 +60,6 @@ app.use( (req, res, next) => {
   }).catch( (err) => {
     console.error("Valami nincs rendben: " + err);
   });
-});
-
-app.get('/tesztSocket', (req, res) => {
-  mqttClient.sendMessage('Szia! °C');
 });
 
 /**
@@ -108,19 +106,21 @@ app.get('/api/deleteRoom/:id', (req, res) => {
 
 // Szenzor beszúrása az adatbázisba!
 app.post('/api/insertSensor', (req, res) => {
-  var icon = req.body.newSensorIcon + " " + req.body.iconSizeCheckbox;
-
-  if(req.body.newSensorIcon === '' || req.body.iconSizeCheckbox === undefined) {
-    icon = req.body.newSensorIcon
+  var icon = req.body.newSensorIcon;
+  if(req.body.newSensorIcon != '') {
+    icon = req.body.newSensorIcon + " " + req.body.iconSizeCheckbox;
   }
 
-  Sensors.insertSensor(req.body.room_id, req.body.sensorName, req.body.mqttLink, icon, (err, room) => {
+  Sensors.insertSensor(req.body.room_id, req.body.sensorName, req.body.displayName, icon, (err, room) => {
     //Error kezelés is kéne!
-    console.log(req.body.room_id);
-    console.log(req.body.sensorName);
-    console.log(req.body.mqttLink);
-    console.log(icon);
-    res.redirect('/' + req.body.room_id);
+    res.redirect('/room/' + req.body.room_id);
+  });
+});
+
+// Összes szenzor lekérdezése
+app.get('/api/getAllSensor', (req, res) => {
+  Sensors.getAllSensor( function(err, data) {
+    res.send(data);
   });
 });
 
@@ -152,8 +152,10 @@ app.post('/api/addDuty', (req, res) => {
 // Szenzor kártya módosítása. (Méret és pozició)!
 app.post('/api/updateSensorCard', (req, res) => {
   var updateData = JSON.parse(req.body.data);
+
   for( var i  = 0; i < updateData.length; i++) {
-    Sensors.updateSensorCard(updateData[i].id, updateData[i].x, updateData[i].y, updateData[i].width, updateData[i].height, function(err, data) {
+    Sensors.updateSensorCard(req.body.window_mode, updateData[i].id, updateData[i].x, updateData[i].y, updateData[i].width, updateData[i].height, function(err, data) {
+      //Error hibakezelés is kéne!;
       console.log("Sikeres kérés!");      
     });
   }
@@ -164,12 +166,13 @@ app.post('/api/deleteSensor/:id', (req, res) => {
   Sensors.deleteSensorById(req.params.id, function(err, data) {
     //Error kezelés is kéne!
     
-    res.redirect('/' + req.body.room_id);
+    res.redirect('/room/' + req.body.room_id);
   });
 });
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/automation', automationRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

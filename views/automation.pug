@@ -1,0 +1,182 @@
+extends layout
+
+block content
+	.card.text-center
+		.card-header.automationCard-Header
+			ul#automationTab.nav.nav-pills.card-header-pills(role='tablist')
+				li.nav-item
+					a#automationDescription-tab.nav-link.active(data-toggle='tab', href='#automationDescription', role='tab', aria-controls='automationDescription', aria-selected='true') Leírás
+				li.nav-item
+					a#automationSensors-tab.nav-link(data-toggle='tab', href='#automationSensors', role='tab', aria-controls='automationSensors', aria-selected='false') Szenzorok
+				li.nav-item
+					a#automationConditions-tab.nav-link(data-toggle='tab', href='#automationConditions', role='tab', aria-controls='automationConditions', aria-selected='false') Feltételek
+		.card-body
+			#automationTab.tab-content
+				#automationDescription.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='automationDescription-tab')
+					h5.card-title Special title treatment
+						button.btn.btn-light.editCardTitle-btn(type='button' data-toggle='modal' data-target='#automationCardTitleModal')
+							i.fas.fa-pen
+					p.card-text With supporting text below as a natural lead-in to additional content.
+						button.btn.btn-light.editCardText-btn(type='button'  data-toggle='modal' data-target='#automationCardTextModal')
+							i.fas.fa-pen
+				#automationSensors.tab-pane.fade(role='tabpanel', aria-labelledby='automationSensors-tab')
+					table.table
+						thead.thead-light
+							tr
+								th(scope='col') #
+								th(scope='col') Szenzor
+								th(scope='col') Link:Üzenet
+						tbody
+							tr
+								th(scope='row') 1
+								td Szenzor neve
+								td /link:üzenet
+							tr
+								th(scope='row') 2
+								td Szenzor neve
+								td /link:üzenet
+					button.btn.btn-outline-secondary(type='button' data-toggle='modal' data-target='#automationAddSensorModal')
+						i.fas.fa-plus
+				#automationConditions.tab-pane.fade(role='tabpanel', aria-labelledby='automationConditions-tab') Feltételek
+					table.table
+						thead.thead-light
+							tr
+								th(scope='col') #
+								th(scope='col') Attribútum_1
+								th(scope='col') Feltétel
+								th(scope='col') Attribútum_2
+						tbody
+							tr
+								th(scope='row') 1
+								td Szenzor_1/link
+								td >=
+								td 30
+					button.btn.btn-outline-secondary(type='button' data-toggle='modal' data-target='#automationAddConditionModal')
+						i.fas.fa-plus
+		.card-footer.automationCardFooter
+			button.btn.btn-secondary.saveAutomationCard-btn(type='button')
+				i.fas.fa-save
+			button.btn.btn-secondary.deleteAutomationCard-btn(type='button')
+				i.fas.fa-times
+			
+	// Automatizációs kártya hozzáadása
+	.addAutomationCard
+		button.btn.btn-outline-secondary(type='button') Automatizáció hozzáadása
+
+	// Automatizáció címének szerkésztése - Modal
+	#automationCardTitleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='automationCardTitleLable', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#automationCardTitleLable.modal-title Automatizáció neve
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') &times;
+				.modal-body
+					.form-group
+						input#automationTitle.form-control(type='text' placeholder='Név')
+				.modal-footer
+					button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
+					button.btn.btn-secondary(type='button') Mentés
+
+	// Automatizáció szövegének szerkésztése - Modal
+	#automationCardTextModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='automationCardTextLable', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#automationCardTextLable.modal-title Automatizáció leírása
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') &times;
+				.modal-body
+					.form-group
+						textarea#textMessage-text.form-control(placeholder='Leírás')
+				.modal-footer
+					button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
+					button.btn.btn-secondary(type='button') Mentés
+	
+	// Automatizációs szenzor hozzáadása - Modal
+	#automationAddSensorModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='automationAddSensorLabel', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#automationAddSensorLabel.modal-title Szenzor hozzáadása
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') &times;
+				.modal-body
+					.input-group.mb-3
+						.input-group-prepend
+							label.input-group-text(for='automationSelectSensor') Szenzor
+						select#automationSelectSensor.custom-select
+							option(selected='') Kiválasztás...
+							option(value='1') Szenzor 1
+							option(value='2') Szenzor 2
+							option(value='3') Szenzor 3
+					.input-group.mb-3
+						.input-group-prepend
+							label.input-group-text(for='automationSelectLink') Link
+						select#automationSelectLink.custom-select
+							option(selected='') Kiválasztás...
+							option(value='1') Link 1
+							option(value='2') Link 2
+							option(value='3') Link 3
+				.modal-footer
+					button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
+					button.btn.btn-secondary(type='button') Mentés
+
+	// Automatizáció feltétel hozzáadása - Modal
+	#automationAddConditionModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='automationAddConditionLabel', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#automationAddConditionLabel.modal-title Feltétel hozzáadása
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') &times;
+				.modal-body
+					.input-group.mb-3
+						.input-group-prepend
+							label.input-group-text(for='automationConditionSelectSensor1') Attribútum_1
+						select#automationConditionSelectSensor.custom-select
+							option(selected='') Kiválasztás...
+							option(value='1') Szenzor 1
+							option(value='2') Szenzor 2
+							option(value='3') Szenzor 3
+					.input-group.mb-3
+						.input-group-prepend
+							label.input-group-text(for='automationConditionSelectLink1') Link
+						select#automationConditionSelectLink1.custom-select
+							option(selected='') Kiválasztás...
+							option(value='1') Link 1
+							option(value='2') Link 2
+							option(value='3') Link 3
+					.input-group.mb-3
+						.input-group-prepend
+							label.input-group-text(for='automationConditionSelectCond') Feltétel
+						select#automationConditionSelectCond.custom-select
+							option(selected='') Kiválasztás...
+							option(value='1') =
+							option(value='2') !=
+							option(value='3') >=
+							option(value='3') <=
+							option(value='3') >
+							option(value='3') <
+					.input-group.mb-3
+						.input-group-prepend
+							label.input-group-text(for='automationConditionSelectSensor2') Attribútum_2
+						select#automationConditionSelectSensor2.custom-select
+							option(selected='') Kiválasztás...
+							option(value='1') Szenzor 1
+							option(value='2') Szenzor 2
+							option(value='3') Szenzor 3
+							option(disabled='disabled') --------------------
+							option(value='4') Szöveg
+							option(value='5') Szám
+					.input-group.mb-3
+						.input-group-prepend
+							label.input-group-text(for='automationConditionSelectLink2') Link
+						select#automationConditionSelectLink2.custom-select
+							option(selected='') Kiválasztás...
+							option(value='1') Link 1
+							option(value='2') Link 2
+							option(value='3') Link 3
+				.modal-footer
+					button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
+					button.btn.btn-secondary(type='button') Mentés

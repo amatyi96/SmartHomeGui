@@ -13,9 +13,11 @@ router.get('/', function(req, res, next) {
 /**
  * ID alapján lesz a szobáknak külön oldala!
  */
-router.get('/:id', function(req, res, next) {
+router.get('/room/:id', function(req, res, next) {
   Sensors.getAllSensorsbyRoomId(req.params.id, function(err, sensors) {
     //Hiba kezelés is kéne!
+
+    console.log(sensors);
     res.render('index', {
       title: 'SmartHomeGui',
       room_id: req.params.id,

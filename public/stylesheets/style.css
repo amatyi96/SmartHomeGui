@@ -199,8 +199,12 @@ a:focus {
     display: none;
 }
 
-.sensorAddDuty-btn {
+.sensorAddDuty-btn, .sensorDutySetting-btn {
     color: #ffc107;
+}
+
+.settingDutyButtonGroup {
+
 }
 
 /* ---------------------------------------------------
@@ -256,9 +260,59 @@ a:focus {
 ----------------------------------------------------- */
 
 .wantNameRadio {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding-left: 0;
 }
 
 #addDutySpanName {
     margin-right: 10rem;
+}
+
+/* ---------------------------------------------------
+    Automation Card
+----------------------------------------------------- */
+
+.automationCard-Header {
+    background: #9c9fa9;
+}
+
+.nav-pills .nav-link.active {
+    background: #343a40;
+}
+
+.editCardTitle-btn {
+    background: white;
+    border: none;
+    margin-left: 10px;
+}
+
+.editCardText-btn {
+    background: white;
+    border: none;
+    margin-left: 10px;
+}
+
+.addAutomationCard {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.automationCardFooter {
+    background: none;
+    position: absolute;
+    right:0;
+}
+
+.deleteAutomationCard-btn {
+    background: none;
+    border: none;
+}
+
+.saveAutomationCard-btn {
+    background: none;
+    border: none;
+}
+
+.addNewLink {
+    text-align: center;
 }
