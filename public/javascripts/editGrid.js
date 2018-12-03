@@ -22,13 +22,13 @@ $(function () {
     }, this);
 
     var window_mode = checkWindowSize();
-    $.post( 'http://localhost:3000/api/updateSensorCard', {'data': JSON.stringify(this.serializedData), 'window_mode': window_mode}, function( data ) {
-        console.log(data);
+    $.post( 'http://localhost:3000/api/updateSensorCard', {'data': JSON.stringify(this.serializedData), 'window_mode': window_mode}, function() {
+      location.reload();
     });
     
   }.bind(this);
 
-  $('#save-grid').click(this.saveGrid);
+  $('#save-grid-modal-btn').click(this.saveGrid);
 });
 
 // Leellenőrzi az aktuális böngésző ablak méretét
@@ -67,7 +67,7 @@ $(document).ready( function() {
 
     // Megvizsgáljuk az oldal betöltésekor, hogy mekkora a böngésző mérete és az alapján töltjük be az oldalt.
     allSensors.done( function(sensors) {
-      if(window_width > 1200 && window_width < 1450) {
+      if(window_width >= 1200 && window_width < 1450) {
         // Megvizsgáljuk, hogy volt-e már 3 oszlopos módban mentés! 
         var is3ColActive = sensors.some( function(sensor) {
           if(sensor.position_3col_active) {
@@ -89,11 +89,6 @@ $(document).ready( function() {
           });
         } else {
           console.log("3 column rendezéssel");
-
-          $('.grid-stack-item').each(function() {
-            grid.minWidth($(this), 4);
-            grid.resize($(this), 4, null);
-          });
 
           threeColumnMode();
         }    
@@ -120,11 +115,6 @@ $(document).ready( function() {
           });
         } else {
           console.log("2 column rendezéssel");
-
-          $('.grid-stack-item').each(function() {
-            grid.minWidth($(this), 6);
-            grid.resize($(this), 6, null);
-          });
 
           twoColumnMode();
         }
@@ -155,11 +145,11 @@ $(window).resize( function() {
 
   if(last_window_width != window_width) {
     var grid = $('.grid-stack').data('gridstack');
-
+    console.log(window_width);
     if(grid) {
       allSensors.done( function(sensors) {
         
-        if(window_width > 1200 && window_width < 1450) {
+        if(window_width >= 1200 && window_width < 1450) {
           // Megvizsgáljuk, hogy volt-e már 3 oszlopos módban mentés! 
           var is3ColActive = sensors.some( function(sensor) {
             if(sensor.position_3col_active) {
@@ -182,12 +172,6 @@ $(window).resize( function() {
             });
           } else {
             console.log("3 column rendezéssel");
-
-            $('.grid-stack-item').each(function() {
-              grid.minWidth($(this), 4);
-              grid.resize($(this), 4, null);
-            });
-
             threeColumnMode();
           }    
         } else if( window_width > 950 && window_width < 1200) {
@@ -213,12 +197,6 @@ $(window).resize( function() {
             });
           } else {
             console.log("2 column rendezéssel");
-
-            $('.grid-stack-item').each(function() {
-              grid.minWidth($(this), 6);
-              grid.resize($(this), 6, null);
-            });
-
             twoColumnMode();
           }
         } else {
@@ -286,15 +264,14 @@ twoColumnMode = function() {
   var area = new Area();
 
   $('.grid-stack-item').each(function() {
-    if($(this).attr("data-gs-width") <= 6) {
-      grid.minWidth($(this), 6);
-      grid.resize($(this), 6, null);
-    }
+    grid.minWidth($(this), 6);
+    grid.resize($(this), 6, null);
 
     var x = 0;
     var y = 0;
-    var width = $(this).attr("data-gs-width");
+    var width = 6;
     var height = $(this).attr("data-gs-height");
+    console.log(width);
     
     while( !area.isAreaEmpty(x, y, width, height)) {
       x++;
@@ -315,14 +292,12 @@ threeColumnMode = function() {
   var area = new Area();
 
   $('.grid-stack-item').each(function() {
-    if($(this).attr("data-gs-width") <= 6) {
-      grid.minWidth($(this), 4);
-      grid.resize($(this), 4, null);
-    }
-    
+    grid.minWidth($(this), 4);
+    grid.resize($(this), 4, null);
+
     var x = 0;
     var y = 0;
-    var width = $(this).attr("data-gs-width");
+    var width = 4;
     var height = $(this).attr("data-gs-height");
     
     while( !area.isAreaEmpty(x, y, width, height)) {

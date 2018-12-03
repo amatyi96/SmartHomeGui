@@ -11,7 +11,6 @@ var sensorSchema = mongoose.Schema({
     name: String,
     icon: String,
     nameDisplay: { type: Boolean, default: false },
-    listDuty: Array,
     position: {
         x: { type: Number, default: 0 },
         y: { type: Number, default: 0 },
@@ -53,7 +52,7 @@ module.exports = {
             room_id: room_id,
             name: name,
             nameDisplay: nameDisplay,
-            icon: icon,
+            icon: icon
         });
 
         newSensor.save(callback);
@@ -67,12 +66,12 @@ module.exports = {
         sensors.find({ room_id: roomId }, null, {sort: {'position.x': 1, 'position.y': 1}}, callback);       
     },
 
-    getAllSensorsbyId: function(id, callback) {
+    getSensorsbyId: function(id, callback) {
         sensors.findOne({ _id: id }, callback);
     },
 
-    updateSensor: function(id, name, icon, duty, callback) {
-        sensors.updateOne({ _id: id }, { $set: { name: name, icon: icon, duty, duty}}, callback);
+    updateSensor: function(id, name, nameDisplay, icon, callback) {
+        sensors.updateOne({ _id: id }, { $set: { name: name, nameDisplay: nameDisplay, icon: icon}}, callback);
     },
 
     /**
@@ -94,10 +93,6 @@ module.exports = {
         } else {
             sensors.updateOne({ _id: id}, { $set: { position: { x: x, y: y, width: width, height: height}}}, callback);
         }
-    },
-
-    updateSensorDuty: function(id, nameDisplay, newDuty, callback) {
-        sensors.updateOne({ _id: id}, { $set: { nameDisplay: nameDisplay }, $push: { listDuty: newDuty }}, callback);   
     },
 
     deleteSensorById: function(id, callback) {

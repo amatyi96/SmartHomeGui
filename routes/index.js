@@ -4,6 +4,7 @@ var router = express.Router();
 // Modellek beimportálása
 //var Rooms = require('./module/rooms');
 var Sensors = require('../module/sensors');
+var Duties = require('../module/duties');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -16,12 +17,14 @@ router.get('/', function(req, res, next) {
 router.get('/room/:id', function(req, res, next) {
   Sensors.getAllSensorsbyRoomId(req.params.id, function(err, sensors) {
     //Hiba kezelés is kéne!
-
-    console.log(sensors);
-    res.render('index', {
-      title: 'SmartHomeGui',
-      room_id: req.params.id,
-      sensors: sensors
+    Duties.getAllDuties( function(err, duties) {
+      //Hiba kezelés is kéne!
+      res.render('index', {
+        title: 'SmartHomeGui',
+        room_id: req.params.id,
+        sensors: sensors,
+        duties: duties
+      });
     });
   });
 });

@@ -18,6 +18,7 @@ mongoose.connect('mongodb://localhost:27017/SmartHomeGui', { useNewUrlParser: tr
 // Modellek beimportálása
 var Rooms = require('./module/rooms');
 var Sensors = require('./module/sensors');
+var Duties = require('./module/duties');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -104,19 +105,6 @@ app.get('/api/deleteRoom/:id', (req, res) => {
   });  
 });
 
-// Szenzor beszúrása az adatbázisba!
-app.post('/api/insertSensor', (req, res) => {
-  var icon = req.body.newSensorIcon;
-  if(req.body.newSensorIcon != '') {
-    icon = req.body.newSensorIcon + " " + req.body.iconSizeCheckbox;
-  }
-
-  Sensors.insertSensor(req.body.room_id, req.body.sensorName, req.body.displayName, icon, (err, room) => {
-    //Error kezelés is kéne!
-    res.redirect('/room/' + req.body.room_id);
-  });
-});
-
 // Összes szenzor lekérdezése
 app.get('/api/getAllSensor', (req, res) => {
   Sensors.getAllSensor( function(err, data) {
@@ -124,28 +112,41 @@ app.get('/api/getAllSensor', (req, res) => {
   });
 });
 
-// Szenzorok lekérdezése az adatbázisból ID alapján!
+// Szenzor lekérdezése az adatbázisból ID alapján!
 app.get('/api/getSensorByID/:id', (req, res) => {
-  Sensors.getAllSensorsbyId(req.params.id, function(err, data) {
+  Sensors.getSensorsbyId(req.params.id, function(err, data) {
     //Error kezelés is kéne!
 
     res.send(data);
   });
 });
 
-// Szenzorok adatainak módosítása!
-app.post('/api/updateSensor/:id', (req, res) => {
-  Sensors.updateSensor(req.params.id, req.body.sensorName, req.body.selectedIcon, req.body.functionRadioButton, function(err, data) {
-    res.redirect('/' + req.body.room_id);
+// Szenzor beszúrása az adatbázisba!
+app.post('/api/insertSensor', (req, res) => {
+  var icon = req.body.newSensorIcon;
+  if(req.body.newSensorIcon == 'fa-empty') {
+    icon = req.body.newSensorIcon + " fa-3x"; 
+  } else {
+    icon = req.body.newSensorIcon + " " + req.body.iconSizeCheckbox;
+  }
+
+  Sensors.insertSensor(req.body.room_id, req.body.sensorName, req.body.nameDisplay, icon, (err, room) => {
+    //Error kezelés is kéne!
+    res.redirect('/room/' + req.body.room_id);
   });
 });
 
-// Funkció hozzáadása egy szenzorhoz
-app.post('/api/addDuty', (req, res) => {
-  console.log(req.body);
-  //res.send('Sikeres post');
-  Sensors.updateSensorDuty(req.body.sensor_id, req.body.displayName, req.body.selectedDuty, function(err, data) {
-    res.send("Siker");
+// Szenzorok adatainak módosítása!
+app.post('/api/updateSensor/:id', (req, res) => {
+  var updateIcon = req.body.updateNewSensorIcon;
+  if(req.body.updateNewSensorIcon == 'fa-empty') {
+    updateIcon = req.body.updateNewSensorIcon + " fa-3x"; 
+  } else {
+    updateIcon = req.body.updateNewSensorIcon + " " + req.body.updateIconSizeCheckbox;
+  }
+
+  Sensors.updateSensor(req.params.id, req.body.updateSensorName, req.body.updateNameDisplay, updateIcon, function(err, data) {
+    res.redirect('/room/' + req.body.room_id);
   });
 });
 
@@ -155,10 +156,10 @@ app.post('/api/updateSensorCard', (req, res) => {
 
   for( var i  = 0; i < updateData.length; i++) {
     Sensors.updateSensorCard(req.body.window_mode, updateData[i].id, updateData[i].x, updateData[i].y, updateData[i].width, updateData[i].height, function(err, data) {
-      //Error hibakezelés is kéne!;
-      console.log("Sikeres kérés!");      
+      //Error hibakezelés is kéne!    
     });
   }
+  res.send();
 });
 
 // Szenzorok törlése
@@ -167,6 +168,33 @@ app.post('/api/deleteSensor/:id', (req, res) => {
     //Error kezelés is kéne!
     
     res.redirect('/room/' + req.body.room_id);
+  });
+});
+
+
+// Funkció hozzáadása egy szenzorhoz
+app.post('/api/addDuty', (req, res) => {
+  Duties.insertDuty(req.body.sensor_id, req.body.selectedDuty, req.body.inputLinks, req.body.outputLinks, function(err, data) {
+    // Hiba kezelés is kéne!
+    res.redirect('/room/' + req.body.room_id);
+  });
+});
+
+// Egy szenzorhoz tartozó funkciók lekérdezés ID alapján
+app.get('/api/getAllDutiesBySensorID/:id', (req, res) => {
+  Duties.getAllDutiesBySensorID(req.params.id, function(err, data) {
+    if(err) {
+      console.log(err);
+    } else {
+      res.send(data);
+    }
+  });
+});
+
+// Színválasztó beállítása! (Lekérdezés)
+app.get('/api/getAllColorPicker', (req, res) => {
+  Duties.getAllColorPicker( function(err, data) {
+    res.send(data);
   });
 });
 

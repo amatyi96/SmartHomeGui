@@ -139,6 +139,10 @@ a:focus {
     background: #697179;
 }
 
+.dutiesDiv {
+    margin-top: 20px;
+}
+
 /* ---------------------------------------------------
     Panel kezelő gombok
 ----------------------------------------------------- */
@@ -203,10 +207,6 @@ a:focus {
     color: #ffc107;
 }
 
-.settingDutyButtonGroup {
-
-}
-
 /* ---------------------------------------------------
     Gridstack overflow hidden
 ----------------------------------------------------- */
@@ -246,7 +246,7 @@ a:focus {
     margin-left: 10px;
 }
 
-#modalIconPicker {
+#modalIconPicker, #settingModalIconPicker {
     position: absolute;
     left: 7%;
 }
