@@ -48,6 +48,10 @@ $(document).on("click", ".roomDelete-btn", function () {
  * Funkció hozzáadása - Modal - Sensor ID feltöltése adattal.
  */
 $(document).on("click", ".sensorAddDuty-btn", function () {
+    deleteAllInputField('.addDutyModalBody');
+    $('.addDutySelectLabel').text('Funkció');
+    $('dutySelectDropdown').val('');
+
     var mySensorId = $(this).data('id');
     $('.modal-body #addDuty_sensor_id').val(mySensorId);
 });
@@ -57,24 +61,24 @@ $(document).on("click", ".sensorAddDuty-btn", function () {
  * Iconok is cserélődnek!
  */
 $('#dutySelectDropdown').on('change', function() {
-    deleteAllInputField();
+    deleteAllInputField('.addDutyModalBody');
     $('.addDutySelectLabel').text('');
 
     if(this.value == 'textDisplay') {
         $('.addDutySelectLabel').append('<i class="fas fa-align-center"></i>');
-        insertInputField();
+        $('.addDutyModalBody').append(inputField());
     } else if(this.value == 'colorPicker') {
         $('.addDutySelectLabel').append('<i class="fas fa-palette"></i>');
-        insertOutputField();
-        insertInputField();
+        $('.addDutyModalBody').append(outputField());
+        $('.addDutyModalBody').append(inputField());
     } else if(this.value == 'switcher') {
         $('.addDutySelectLabel').append('<i class="fas fa-toggle-on"></i>');
-        insertOutputField();
-        insertInputField();
+        $('.addDutyModalBody').append(outputField());
+        $('.addDutyModalBody').append(inputField());
     } else if(this.value == 'slider') {
         $('.addDutySelectLabel').append('<i class="fas fa-sliders-h"></i>');
-        insertOutputField();
-        insertInputField();
+        $('.addDutyModalBody').append(outputField());
+        $('.addDutyModalBody').append(inputField());
     } else if(this.value == 'universalSwitcher') {
         $('.addDutySelectLabel').append('<i class="fas fa-toggle-on"></i>');
         $(".addNewLink").show();            
@@ -85,12 +89,12 @@ $('#dutySelectDropdown').on('change', function() {
 
 // Új kimeneti link mező beszúrása
 $('.addNewOutputField').click( function() {
-    insertOutputField();
+    $('.addDutyModalBody').append(outputField());
 });
 
 // Új bemeneti link mező beszúrása
 $('.addNewInputField').click( function() {
-    insertInputField();
+    $('.addDutyModalBody').append(inputField());
 });
 
 var getDuties;
@@ -98,6 +102,12 @@ var getDuties;
  * Funkció szerkesztése - Modal - feltöltése adattal
  */
 $(document).on("click", ".sensorDutySetting-btn", function () {
+    $('#updateDutySelectDropdown').empty();
+    $('.updateDutySelectLabel').text('Funkció');
+    $('#updateDutySelectDropdown').append($("<option></option>").attr("value", "").text("Kiválasztás..."));
+    deleteAllInputField('.updateDutyModalBody');
+
+
     var mySensorId = $(this).data('id');
     $('.modal-body #updateDuty_sensor_id').val(mySensorId);
 
@@ -112,49 +122,103 @@ $(document).on("click", ".sensorDutySetting-btn", function () {
  * Funkció kiválasztása után megjelennek a kimeneti/bemeneti mezők!
  */
 $('#updateDutySelectDropdown').on('change', function() {
-    //deleteAllInputField();
-    //$('.addDutySelectLabel').text('');
+    deleteAllInputField('.updateDutyModalBody');
+    $('.updateDutySelectLabel').text('');
+
+    var currentValue = this.value;
 
     getDuties.done( function(duties) {
-        var i = 0;
-
         duties.forEach( duty => {
-            if(duty.dutyName == 'textDisplay') {
-                console.log(inputField());
+            if(currentValue == 'textDisplay' && duty.dutyName == 'textDisplay') {
+                console.log(duty._id)
+                $('.modal-body #updateDuty_id').val(duty._id);
                 $('.updateDutySelectLabel').append('<i class="fas fa-align-center"></i>');
                 duty.inputLinks.forEach( inputLink => {
-                    var inputFieldID  = "input-" + i + "-" + duty._id;
                     var inputFieldHTML = inputField();
 
                     $('.updateDutyModalBody').append(inputFieldHTML);
                     inputFieldHTML.children().last().attr("value", inputLink)
-                    //$('.modal-body ' + inputFieldID).attr("value", inputLink);
                 });    
-            } /*else if(duty.dutyName == 'colorPicker') {
-                $('.addDutySelectLabel').append('<i class="fas fa-palette"></i>');
-                insertOutputField();
-                insertInputField();
-            } else if(duty.dutyName == 'switcher') {
-                $('.addDutySelectLabel').append('<i class="fas fa-toggle-on"></i>');
-                insertOutputField();
-                insertInputField();
-            } else if(duty.dutyName == 'slider') {
-                $('.addDutySelectLabel').append('<i class="fas fa-sliders-h"></i>');
-                insertOutputField();
-                insertInputField();
-            } else if(duty.dutyName == 'universalSwitcher') {
-                $('.addDutySelectLabel').append('<i class="fas fa-toggle-on"></i>');
-                $(".addNewLink").show();            
-            } else {
-                $('.addDutySelectLabel').text('Funkció');
-            }
-            
+            } else if(currentValue == 'colorPicker'  && duty.dutyName == 'colorPicker') {
+                $('.modal-body #updateDuty_id').val(duty._id);
+                $('.updateDutySelectLabel').append('<i class="fas fa-palette"></i>');
+                duty.inputLinks.forEach( inputLink => {
+                    var inputFieldHTML = inputField();
 
-            duty.outputLinks.forEach( outputLink => {
-                insertOutputField();
-            });*/
+                    $('.updateDutyModalBody').append(inputFieldHTML);
+                    inputFieldHTML.children().last().attr("value", inputLink);
+                });         
+
+                duty.outputLinks.forEach( outputLink => {
+                    var outputFieldHTML = outputField();
+                    
+                    $('.updateDutyModalBody').append(outputFieldHTML);
+                    outputFieldHTML.children().last().attr("value", outputLink);
+                });
+            } else if(currentValue == 'switcher' && duty.dutyName == 'switcher') {
+                $('.modal-body #updateDuty_id').val(duty._id);
+                $('.updateDutySelectLabel').append('<i class="fas fa-toggle-on"></i>');
+                duty.inputLinks.forEach( inputLink => {
+                    var inputFieldHTML = inputField();
+
+                    $('.updateDutyModalBody').append(inputFieldHTML);
+                    inputFieldHTML.children().last().attr("value", inputLink);
+                });         
+
+                duty.outputLinks.forEach( outputLink => {
+                    var outputFieldHTML = outputField();
+                    
+                    $('.updateDutyModalBody').append(outputFieldHTML);
+                    outputFieldHTML.children().last().attr("value", outputLink);
+                });
+            } else if(currentValue == 'slider' && duty.dutyName == 'slider') {
+                $('.modal-body #updateDuty_id').val(duty._id);
+                $('.updateDutySelectLabel').append('<i class="fas fa-sliders-h"></i>');
+                duty.inputLinks.forEach( inputLink => {
+                    var inputFieldHTML = inputField();
+
+                    $('.updateDutyModalBody').append(inputFieldHTML);
+                    inputFieldHTML.children().last().attr("value", inputLink);
+                });         
+
+                duty.outputLinks.forEach( outputLink => {
+                    var outputFieldHTML = outputField();
+                    
+                    $('.updateDutyModalBody').append(outputFieldHTML);
+                    outputFieldHTML.children().last().attr("value", outputLink);
+                });
+            } else if(currentValue == 'universalSwitcher' && duty.dutyName == 'universalSwitcher') {
+                $('.modal-body #updateDuty_id').val(duty._id);
+                $('.updateDutySelectLabel').append('<i class="fas fa-toggle-on"></i>');
+                duty.inputLinks.forEach( inputLink => {
+                    var inputFieldHTML = inputField();
+
+                    $('.updateDutyModalBody').append(inputFieldHTML);
+                    inputFieldHTML.children().last().attr("value", inputLink);
+                });         
+
+                duty.outputLinks.forEach( outputLink => {
+                    var outputFieldHTML = outputField();
+                    
+                    $('.updateDutyModalBody').append(outputFieldHTML);
+                    outputFieldHTML.children().last().attr("value", outputLink);
+                });
+                $(".addNewLink").show();            
+            } else if( currentValue == '') {
+                $('.updateDutySelectLabel').text('Funkció');
+            }
         });
     });
+});
+
+// Új kimeneti link mező beszúrása
+$('.updateNewOutputField').click( function() {
+    $('.updateDutyModalBody').append(outputField());
+});
+
+// Új bemeneti link mező beszúrása
+$('.updateNewInputField').click( function() {
+    $('.updateDutyModalBody').append(inputField());
 });
 
 // Beszúr egy új bemeneti input mezőt
@@ -167,16 +231,15 @@ function inputField() {
 }
 
 // Beszúr egy új kimenet input mezőt
-function insertOutputField() {
-    var newOutputField = $("<div class='input-group input-group-sm mb-3 inputDutyLink'>" +
+function outputField() {
+    return $("<div class='input-group input-group-sm mb-3 inputDutyLink'>" +
                                 "<div class='input-group-prepend'>" +
                                     "<span class='input-group-text' id='inputGroup-sizing-sm'>Kimenet</span></div>" +
                                         "<input class='form-control' type='text' name='outputLinks' aria-describedby='inputGroup-sizing-sm' placeholder='Link' /></div>");
-    $('.addDutyModalBody').append(newOutputField);
 }
 
 // Törli az összes input mezőt az adott div-ben
-function deleteAllInputField() {
-    $('.addDutyModalBody').empty();
+function deleteAllInputField(currentDutyModalBody) {
+    $(currentDutyModalBody).empty();
     $(".addNewLink").hide();
 }

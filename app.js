@@ -191,6 +191,18 @@ app.get('/api/getAllDutiesBySensorID/:id', (req, res) => {
   });
 });
 
+// Funkció hozzáadása egy szenzorhoz
+app.post('/api/updateDuty', (req, res) => {
+  Duties.updateDuty(req.body.duty_id, req.body.sensor_id, req.body.selectedDuty, req.body.inputLinks, req.body.outputLinks, function(err, data) {
+    if(err) {
+      console.log(err);
+    } else {
+      res.redirect('/room/' + req.body.room_id);
+    }
+    console.log("Sikeres kérés!");
+  });
+});
+
 // Színválasztó beállítása! (Lekérdezés)
 app.get('/api/getAllColorPicker', (req, res) => {
   Duties.getAllColorPicker( function(err, data) {

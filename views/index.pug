@@ -199,6 +199,7 @@ block content
           .modal-body
             input(type='hidden' name='room_id' value=room_id)
             input(id='updateDuty_sensor_id' type='hidden' name='sensor_id' value='')
+            input(id='updateDuty_id' type='hidden' name='duty_id' value='')
             .input-group.mb-3
               .input-group-prepend
                 label.input-group-text.updateDutySelectLabel(for='updateDutySelectDropdown') Funkció
@@ -207,8 +208,8 @@ block content
             .updateDutyModalBody
             .addNewLink
               .btn-group.btn-group-sm(role='group')
-                button.btn.btn-secondary.addNewOutputField(type='button') Kimenet
-                button.btn.btn-secondary.addNewInputField(type='button') Bemenet
+                button.btn.btn-secondary.updateNewOutputField(type='button') Kimenet
+                button.btn.btn-secondary.updateNewInputField(type='button') Bemenet
           .modal-footer
             button.btn.btn-danger(type='button', data-dismiss='modal') Mégse
             button.btn.btn-secondary(type='submit') Mentés

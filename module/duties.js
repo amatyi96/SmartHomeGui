@@ -61,5 +61,9 @@ module.exports = {
      */
     getAllColorPicker: function(callback) {
         duties.find({dutyName: 'colorPicker'}, callback);
+    },
+
+    updateDuty: function(id, sensor_id, dutyName, inputLinks = [], outputLinks = [], callback) {
+        duties.updateOne({_id: id, sensor_id: sensor_id}, { $set: { dutyName: dutyName, inputLinks: inputLinks, outputLinks: outputLinks}}, callback);
     }
 }
